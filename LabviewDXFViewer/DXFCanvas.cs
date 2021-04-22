@@ -16,6 +16,7 @@ namespace LabviewDXFViewer
     public partial class DXFCanvas : UserControl
     {
 
+        public Microsites Microsites;
         DXFView Viewer;
         public DXFCanvas()
         {
@@ -23,7 +24,6 @@ namespace LabviewDXFViewer
 
             pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
         }
-
 
 
         protected override void OnResize(EventArgs e)
@@ -51,7 +51,23 @@ namespace LabviewDXFViewer
 
         private void lbLayerSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
+            foreach (var item in lbLayerSelect.Items)
+                ((DXFLayer)item).Visible = false;
+            foreach (var item in lbLayerSelect.CheckedItems)
+                ((DXFLayer)item).Visible = true;
 
+            Viewer.Draw(pictureBox1);
+        }
+
+        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (Viewer.Hilight(e.Location, cbSelectionMirror.Checked, cbSelectionRotate.Checked))
+            {
+                Viewer.Draw(pictureBox1);
+                if (Microsites != null)
+                    Microsites.ListData(Viewer.SelectedLocations);
+            }
+            
         }
     }
 }

@@ -16,11 +16,12 @@ namespace LabviewDXFViewer
         public Form1()
         {
             InitializeComponent();
+            dxfCanvas1.Microsites = microsites1;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var file = @"C:\Users\847695.CORPAA\Downloads\2021-03-26 ORNL Single.dxf";
+            var file = @"C:\Users\bashc\Downloads\2021-03-26 ORNL Single.dxf";
            // file = @"C:\Users\847695.CORPAA\Downloads\2021-04-07 Chip Pads.dxf";
             dxfCanvas1.LoadFile(file);
         }

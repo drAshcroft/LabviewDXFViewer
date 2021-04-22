@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
@@ -24,6 +25,8 @@ namespace DXFImporter
         public int shapeIdentifier;
         public int rotation;
         public bool highlighted;
+
+        public string LayerIndex { get; set; }
 
         public abstract Color AccessContourColor
         {
@@ -50,11 +53,17 @@ namespace DXFImporter
         }
 
         public abstract void Draw(Pen pen, Graphics g, double scale, Point offset );
-        public abstract bool Highlight(Pen pen, Graphics g, Point point);
+        public virtual bool Highlight(Point point) { return false; }
 
         public abstract Rectangle Bounds
         {
             get;
+        }
+
+        public abstract System.Drawing.Point[] SelectedLocations
+        {
+            get;
+             
         }
 
     }
@@ -142,7 +151,7 @@ namespace DXFImporter
                 if (highlighted)
                 {
                     lePen.Color = Color.Red;
-                    highlighted = false;
+                   
                 }
 
                 g.DrawLine(lePen, (float)(startPoint.X - offset.X) * (float)scale, (float)(startPoint.Y - offset.Y) * (float)scale,
@@ -169,16 +178,16 @@ namespace DXFImporter
             }
         }
 
-        public override bool Highlight(Pen pen, Graphics g, Point point)
+        public override bool Highlight( Point point)
         {
             GraphicsPath areaPath;
-            Pen areaPen;
+           // Pen areaPen;
             Region areaRegion;
 
             // Create path which contains wide line
             // for easy mouse selection
             areaPath = new GraphicsPath();
-            areaPen = new Pen(Color.Red, 7);
+          var   areaPen = new Pen(Color.Red, lineWidth);
 
             areaPath.AddLine(StartPoint.X, StartPoint.Y, EndPoint.X, EndPoint.Y);
             // startPoint and EndPoint are class members of type Point
@@ -192,61 +201,32 @@ namespace DXFImporter
                 //g.DrawLine(pen, GetStartPoint, GetEndPoint);
 
                 //g.DrawLine(pen, GetStartPoint.X, GetStartPoint.Y , GetEndPoint.X, GetEndPoint.Y);
-
+                highlighted = !highlighted;
                 areaPath.Dispose();
                 areaPen.Dispose();
                 areaRegion.Dispose();
 
                 return true;
             }
-
+            areaPath.Dispose();
+            areaPen.Dispose();
+            areaRegion.Dispose();
             return false;
         }
 
 
-        public bool Highlight(Pen pen, Graphics g, Point point, double scale)
+        public override System.Drawing.Point[] SelectedLocations
         {
-            GraphicsPath areaPath;
-            Pen areaPen;
-            Region areaRegion;
-
-            // Create path which contains wide line
-            // for easy mouse selection
-            areaPath = new GraphicsPath();
-            areaPen = new Pen(Color.Red, 7);
-
-            areaPath.AddLine((float)StartPoint.X * (float)scale, (float)StartPoint.Y * (float)scale, (float)EndPoint.X * (float)scale, (float)EndPoint.Y * (float)scale);
-            // startPoint and EndPoint are class members of type Point
-            areaPath.Widen(areaPen);
-
-            // Create region from the path
-            try
+            get
             {
-                areaRegion = new Region(areaPath);
-            }
-            catch
-            {
-                return false;
+                if (highlighted)
+                {
+                    return new System.Drawing.Point[] { new System.Drawing.Point( (startPoint.X+endPoint.X)/2, (startPoint.Y + endPoint.Y) / 2) };
+                }
+                else
+                    return null;
             }
 
-            if (areaRegion.IsVisible(point) == true)
-            {
-                //g.DrawLine(pen, GetStartPoint, GetEndPoint);
-
-                //g.DrawLine(pen, (float)GetStartPoint.X* (float)scale, (float)GetStartPoint.Y * (float)scale, (float)GetEndPoint.X* (float)scale, (float)GetEndPoint.Y* (float)scale);
-
-                areaPath.Dispose();
-                areaPen.Dispose();
-                areaRegion.Dispose();
-
-                return true;
-            }
-
-            areaPath.Dispose();
-            areaPen.Dispose();
-            areaRegion.Dispose();
-
-            return false;
         }
 
         public override Rectangle Bounds => throw new NotImplementedException();
@@ -477,133 +457,133 @@ namespace DXFImporter
 		
 		*/
 
-        public override bool Highlight(Pen pen, Graphics g, Point point)
-        {
-            Point P1 = StartPoint;
-            Point P2 = EndPoint;
+        //public override bool Highlight(Pen pen, Graphics g, Point point)
+        //{
+        //    Point P1 = StartPoint;
+        //    Point P2 = EndPoint;
 
-            Point P3 = new Point(P2.X, P1.Y);
-            Point P4 = new Point(P1.X, P2.Y);
+        //    Point P3 = new Point(P2.X, P1.Y);
+        //    Point P4 = new Point(P1.X, P2.Y);
 
-            if (AccessRotation != 0)
-            {
-                Point bottom = new Point(0, 0);
-                Point top = new Point(0, 0);
-                Point left = new Point(0, 0);
-                Point right = new Point(0, 0);
+        //    if (AccessRotation != 0)
+        //    {
+        //        Point bottom = new Point(0, 0);
+        //        Point top = new Point(0, 0);
+        //        Point left = new Point(0, 0);
+        //        Point right = new Point(0, 0);
 
-                Point center = new Point(P1.X + (P3.X - P1.X) / 2, P1.Y + (P4.Y - P1.Y) / 2);
+        //        Point center = new Point(P1.X + (P3.X - P1.X) / 2, P1.Y + (P4.Y - P1.Y) / 2);
 
-                P1 = CalculateRotatedNewPoint(P1, center, AccessRotation);
-                P2 = CalculateRotatedNewPoint(P2, center, AccessRotation);
-                P3 = CalculateRotatedNewPoint(P3, center, AccessRotation);
-                P4 = CalculateRotatedNewPoint(P4, center, AccessRotation);
+        //        P1 = CalculateRotatedNewPoint(P1, center, AccessRotation);
+        //        P2 = CalculateRotatedNewPoint(P2, center, AccessRotation);
+        //        P3 = CalculateRotatedNewPoint(P3, center, AccessRotation);
+        //        P4 = CalculateRotatedNewPoint(P4, center, AccessRotation);
 
-                int maxX = Math.Max(P1.X, P2.X);
-                maxX = Math.Max(maxX, P3.X);
-                maxX = Math.Max(maxX, P4.X);
+        //        int maxX = Math.Max(P1.X, P2.X);
+        //        maxX = Math.Max(maxX, P3.X);
+        //        maxX = Math.Max(maxX, P4.X);
 
-                if (maxX == P1.X)
-                    right = P1;
-                if (maxX == P2.X)
-                    right = P2;
-                if (maxX == P3.X)
-                    right = P3;
-                if (maxX == P4.X)
-                    right = P4;
+        //        if (maxX == P1.X)
+        //            right = P1;
+        //        if (maxX == P2.X)
+        //            right = P2;
+        //        if (maxX == P3.X)
+        //            right = P3;
+        //        if (maxX == P4.X)
+        //            right = P4;
 
-                int minX = Math.Min(P1.X, P2.X);
-                minX = Math.Min(minX, P3.X);
-                minX = Math.Min(minX, P4.X);
-
-
-                if (minX == P1.X)
-                    left = P1;
-                if (minX == P2.X)
-                    left = P2;
-                if (minX == P3.X)
-                    left = P3;
-                if (minX == P4.X)
-                    left = P4;
+        //        int minX = Math.Min(P1.X, P2.X);
+        //        minX = Math.Min(minX, P3.X);
+        //        minX = Math.Min(minX, P4.X);
 
 
-                int maxY = Math.Max(P1.Y, P2.Y);
-                maxY = Math.Max(maxY, P3.Y);
-                maxY = Math.Max(maxY, P4.Y);
+        //        if (minX == P1.X)
+        //            left = P1;
+        //        if (minX == P2.X)
+        //            left = P2;
+        //        if (minX == P3.X)
+        //            left = P3;
+        //        if (minX == P4.X)
+        //            left = P4;
 
 
-                if (maxY == P1.Y)
-                    bottom = P1;
-                if (maxY == P2.Y)
-                    bottom = P2;
-                if (maxY == P3.Y)
-                    bottom = P3;
-                if (maxY == P4.Y)
-                    bottom = P4;
+        //        int maxY = Math.Max(P1.Y, P2.Y);
+        //        maxY = Math.Max(maxY, P3.Y);
+        //        maxY = Math.Max(maxY, P4.Y);
 
 
-                int minY = Math.Min(P1.Y, P2.Y);
-                minY = Math.Min(minY, P3.Y);
-                minY = Math.Min(minY, P4.Y);
+        //        if (maxY == P1.Y)
+        //            bottom = P1;
+        //        if (maxY == P2.Y)
+        //            bottom = P2;
+        //        if (maxY == P3.Y)
+        //            bottom = P3;
+        //        if (maxY == P4.Y)
+        //            bottom = P4;
 
 
-                if (minY == P1.Y)
-                    top = P1;
-                if (minY == P2.Y)
-                    top = P2;
-                if (minY == P3.Y)
-                    top = P3;
-                if (minY == P4.Y)
-                    top = P4;
+        //        int minY = Math.Min(P1.Y, P2.Y);
+        //        minY = Math.Min(minY, P3.Y);
+        //        minY = Math.Min(minY, P4.Y);
 
 
-                double c1 = checkPosition(left, top, point);
-                double c2 = checkPosition(right, top, point);
-                double c3 = checkPosition(right, bottom, point);
-                double c4 = checkPosition(left, bottom, point);
-
-                if ((c1 > 0 && c2 > 0 && c3 < 0 && c4 < 0))
-                {
-
-                    pen.Color = Color.LightGreen;
-
-                   // Draw(pen, g, scale, offset);
-
-                    return true;
-                }
-            }
-            else
-            {
-                int maxX = Math.Max(P1.X, P2.X);
-                maxX = Math.Max(maxX, P3.X);
-                maxX = Math.Max(maxX, P4.X);
-
-                int minX = Math.Min(P1.X, P2.X);
-                minX = Math.Min(minX, P3.X);
-                minX = Math.Min(minX, P4.X);
-
-                int maxY = Math.Max(P1.Y, P2.Y);
-                maxY = Math.Max(maxY, P3.Y);
-                maxY = Math.Max(maxY, P4.Y);
-
-                int minY = Math.Min(P1.Y, P2.Y);
-                minY = Math.Min(minY, P3.Y);
-                minY = Math.Min(minY, P4.Y);
+        //        if (minY == P1.Y)
+        //            top = P1;
+        //        if (minY == P2.Y)
+        //            top = P2;
+        //        if (minY == P3.Y)
+        //            top = P3;
+        //        if (minY == P4.Y)
+        //            top = P4;
 
 
-                if (point.X > minX && point.X < maxX && point.Y > minY && point.Y < maxY)
-                {
-                    pen.Color = Color.LightGreen;
-                    //	pen.Width = 1;
+        //        double c1 = checkPosition(left, top, point);
+        //        double c2 = checkPosition(right, top, point);
+        //        double c3 = checkPosition(right, bottom, point);
+        //        double c4 = checkPosition(left, bottom, point);
 
-                    //Draw(pen, g);
+        //        if ((c1 > 0 && c2 > 0 && c3 < 0 && c4 < 0))
+        //        {
 
-                    return true;
-                }
-            }
+        //            pen.Color = Color.LightGreen;
 
-            return false;
-        }
+        //           // Draw(pen, g, scale, offset);
+
+        //            return true;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        int maxX = Math.Max(P1.X, P2.X);
+        //        maxX = Math.Max(maxX, P3.X);
+        //        maxX = Math.Max(maxX, P4.X);
+
+        //        int minX = Math.Min(P1.X, P2.X);
+        //        minX = Math.Min(minX, P3.X);
+        //        minX = Math.Min(minX, P4.X);
+
+        //        int maxY = Math.Max(P1.Y, P2.Y);
+        //        maxY = Math.Max(maxY, P3.Y);
+        //        maxY = Math.Max(maxY, P4.Y);
+
+        //        int minY = Math.Min(P1.Y, P2.Y);
+        //        minY = Math.Min(minY, P3.Y);
+        //        minY = Math.Min(minY, P4.Y);
+
+
+        //        if (point.X > minX && point.X < maxX && point.Y > minY && point.Y < maxY)
+        //        {
+        //            pen.Color = Color.LightGreen;
+        //            //	pen.Width = 1;
+
+        //            //Draw(pen, g);
+
+        //            return true;
+        //        }
+        //    }
+
+        //    return false;
+        //}
 
         private double checkPosition(Point P1, Point P2, Point current)
         {
@@ -712,8 +692,20 @@ namespace DXFImporter
             g.DrawEllipse(pen, (float)centerPoint.X * (float)scale - (float)radius * (float)scale, (float)centerPoint.Y * (float)scale - (float)radius * (float)scale, (float)radius * 2 * (float)scale, (float)radius * 2 * (float)scale);
         }
 
-       
-           
+
+        public override System.Drawing.Point[] SelectedLocations
+        {
+            get
+            {
+                if (highlighted)
+                {
+                    return new System.Drawing.Point[] { centerPoint };
+                }
+                else
+                    return null;
+            }
+
+        }
 
         /*		public override bool Highlight(Pen pen, Graphics g, Point point)
 				{
@@ -756,32 +748,32 @@ namespace DXFImporter
 		
 		*/
 
-        public override bool Highlight(Pen pen, Graphics g, Point point)
-        {
-            Point center = AccessCenterPoint;
-            int rad = (int)AccessRadius;
+        //public override bool Highlight(Pen pen, Graphics g, Point point)
+        //{
+        //    Point center = AccessCenterPoint;
+        //    int rad = (int)AccessRadius;
 
-            int check1y = center.Y - rad;
-            int check2y = center.Y + rad;
-            int check3x = center.X + rad;
-            int check4x = center.X - rad;
+        //    int check1y = center.Y - rad;
+        //    int check2y = center.Y + rad;
+        //    int check3x = center.X + rad;
+        //    int check4x = center.X - rad;
 
-            double result = (point.X - center.X) * (point.X - center.X) + (point.Y - center.Y) * (point.Y - center.Y) - radius * radius;
+        //    double result = (point.X - center.X) * (point.X - center.X) + (point.Y - center.Y) * (point.Y - center.Y) - radius * radius;
 
-            if (result < 0)
-            {
-                //pen.Color = Color.Red;
-
-
-                //g.DrawEllipse(pen, centerPoint.X - (int) radius, centerPoint.Y - (int)radius, (int)radius*2, (int)radius*2);
-
-                return true;
-            }
+        //    if (result < 0)
+        //    {
+        //        //pen.Color = Color.Red;
 
 
+        //        //g.DrawEllipse(pen, centerPoint.X - (int) radius, centerPoint.Y - (int)radius, (int)radius*2, (int)radius*2);
 
-            return false;
-        }
+        //        return true;
+        //    }
+
+
+
+        //    return false;
+        //}
 
         public bool Highlight(Pen pen, Graphics g, Point point, double scale)
         {
@@ -823,11 +815,12 @@ namespace DXFImporter
 
         private double XMax = double.MinValue, XMin = double.MaxValue;
         private double YMax = double.MinValue, YMin = double.MaxValue;
-
+        
         private ArrayList listOfLines;
 
-        public DXFPolyline(Color color, int w)
+        public DXFPolyline(Color color, int w, string layerIndex)
         {
+            LayerIndex = layerIndex;
             listOfLines = new ArrayList();
 
             contourColor = color;
@@ -894,53 +887,46 @@ namespace DXFImporter
 
             foreach (DFXLine obj in listOfLines)
             {
-                 
-                
 
                 obj.Draw(pen, g,scale, offset);
             }
 
         }
 
+        public override System.Drawing.Point[] SelectedLocations
+        {
+            get
+            {
+                List<System.Drawing.Point> selected = new List<System.Drawing.Point>();
+                foreach (DFXLine obj in listOfLines)                    //iterates through the objects
+                {
+                    var selec = obj.SelectedLocations;
+                    if (selec != null)
+                    {
+                        foreach (var s in selec)
+                            if (s != null)
+                                selected.Add(s);
+                    }
+                }
+                return selected.ToArray();
+            }
+        }
+
+
+        public override bool Highlight( Point point)
+        {
+            foreach (DFXLine obj in listOfLines)
+            {
+                if (obj.Highlight( point))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
       
-
-        public override bool Highlight(Pen pen, Graphics g, Point point)
-        {
-            foreach (DFXLine obj in listOfLines)
-            {
-                //obj.Draw(pen, g);
-
-                if (obj.Highlight(pen, g, point))
-                {
-                    //pen.Color = Color.Red;
-                    //Draw(pen, g);
-                    return true;
-                }
-            }
-
-
-
-            return false;
-        }
-
-        public bool Highlight(Pen pen, Graphics g, Point point, double scale)
-        {
-            foreach (DFXLine obj in listOfLines)
-            {
-                //obj.Draw(pen, g);
-
-                if (obj.Highlight(pen, g, point, scale))
-                {
-                    //pen.Color = Color.Red;
-                    //Draw(pen, g, scale);
-                    return true;
-                }
-            }
-
-
-
-            return false;
-        }
 
         public void AppendLine(DFXLine theLine)
         {
@@ -1117,33 +1103,45 @@ namespace DXFImporter
             g.DrawArc(pen, (float)centerPoint.X * (float)scale - (float)radius * (float)scale, (float)centerPoint.Y * (float)scale - (float)radius * (float)scale, (float)radius * 2 * (float)scale, (float)radius * 2 * (float)scale, -(float)startAngle, tempAngle);
         }
 
-      
-            
 
-        public override bool Highlight(Pen pen, Graphics g, Point point)
+        public override System.Drawing.Point[] SelectedLocations
         {
-            Point center = AccessCenterPoint;
-            int rad = (int)AccessRadius;
-
-            int check1y = center.Y - rad;
-            int check2y = center.Y + rad;
-            int check3x = center.X + rad;
-            int check4x = center.X - rad;
-
-            double result = (point.X - center.X) * (point.X - center.X) + (point.Y - center.Y) * (point.Y - center.Y) - radius * radius;
-
-            if (result < 0)
+            get
             {
-                //pen.Color = Color.Yellow;
-
-
-                //g.DrawEllipse(pen, centerPoint.X - (int) radius, centerPoint.Y - (int)radius, (int)radius*2, (int)radius*2);
-
-                return true;
+                if (highlighted)
+                {
+                    return new System.Drawing.Point[] { centerPoint };
+                }
+                else
+                    return null;
             }
 
-            return false;
         }
+
+        //public override bool Highlight(Pen pen, Graphics g, Point point)
+        //{
+        //    Point center = AccessCenterPoint;
+        //    int rad = (int)AccessRadius;
+
+        //    int check1y = center.Y - rad;
+        //    int check2y = center.Y + rad;
+        //    int check3x = center.X + rad;
+        //    int check4x = center.X - rad;
+
+        //    double result = (point.X - center.X) * (point.X - center.X) + (point.Y - center.Y) * (point.Y - center.Y) - radius * radius;
+
+        //    if (result < 0)
+        //    {
+        //        //pen.Color = Color.Yellow;
+
+
+        //        //g.DrawEllipse(pen, centerPoint.X - (int) radius, centerPoint.Y - (int)radius, (int)radius*2, (int)radius*2);
+
+        //        return true;
+        //    }
+
+        //    return false;
+        //}
 
         public bool Highlight(Pen pen, Graphics g, Point point, double scale)
         {

@@ -11,13 +11,26 @@ using System.Windows.Forms;
 
 namespace LabviewDXFViewer
 {
-    class DXFView
+    public class DXFLayer
     {
-        public string[] Layers { get; set; }
+        public string LayerName { get; set; }
+        public bool Visible { get; set; }
+
+        public Color color { get; set; }
+
+        public override string ToString()
+        {
+            return LayerName;
+        }
+    }
+
+    public class DXFView
+    {
+        public DXFLayer[] Layers { get; set; }
         public void LoadFile(string filename)
         {
             DxfDocument loaded = DxfDocument.Load(filename);
-            Layers = loaded.Layers.Select(x => x.Name).OrderBy(x => x).ToArray();
+            Layers = loaded.Layers.OrderBy(x => x.Name).Select(x => new DXFLayer { LayerName = x.Name, Visible = true, color = x.Color.ToColor() }).ToArray();
 
 
             Shapes = new List<DXFShape>();
@@ -29,17 +42,21 @@ namespace LabviewDXFViewer
                     switch (shape.Type)
                     {
                         case EntityType.Polyline:
-                            Shapes.Add(new DXFPolyline(shape.Color.ToColor(), 1));
+                            Shapes.Add(new DXFPolyline(shape.Color.ToColor(), 1, shape.Layer.Name));
                             break;
                         case EntityType.LightWeightPolyline:
-                            var pl = new DXFPolyline(shape.Color.ToColor(), 1);
+
+                            Color color = shape.Color.ToColor();
+                            if (shape.Color.IsByLayer)
+                                color = shape.Layer.Color.ToColor();
+                            var pl = new DXFPolyline(color, 1, shape.Layer.Name);
                             var specificShape = (LwPolyline)shape;
                             for (int i = 1; i < specificShape.Vertexes.Count; i++)
                             {
                                 pl.AppendLine(new DFXLine(
                                      new System.Drawing.Point((int)specificShape.Vertexes[i - 1].Position.X, (int)specificShape.Vertexes[i - 1].Position.Y),
                                      new System.Drawing.Point((int)specificShape.Vertexes[i].Position.X, (int)specificShape.Vertexes[i].Position.Y),
-                                     shape.Color.ToColor(),
+                                     color,
                                      (int)specificShape.Vertexes[i].StartWidth)
                                     );
                             }
@@ -82,11 +99,10 @@ namespace LabviewDXFViewer
             }
 
 
-            if (XMax > pbWidth)
-                scaleX = (double)(pbWidth) / (double)XMax;
 
-            if (YMax > pbHeight)
-                scaleY = (double)(pbHeight) / (double)YMax;
+            scaleX = (double)(pbWidth) / (double)XMax * .5;
+
+            scaleY = (double)(pbHeight) / (double)YMax * .5;
 
             mainScale = Math.Min(scaleX, scaleY);
         }
@@ -95,6 +111,8 @@ namespace LabviewDXFViewer
         {
             ScaleImage(pictureBox1.Image.Width, pictureBox1.Image.Height);
 
+            var drawList = Layers.Where(x => x.Visible).Select(x => x.LayerName).ToList();
+            var colors = Enum.GetNames(typeof(KnownColor)).Where(item => !item.StartsWith("Control")).OrderBy(item => item).Select(x => Color.FromName(x)).ToArray();
 
             using (var g = Graphics.FromImage(pictureBox1.Image))
             {
@@ -104,37 +122,33 @@ namespace LabviewDXFViewer
 
                 System.Drawing.Drawing2D.LinearGradientBrush brush = new System.Drawing.Drawing2D.LinearGradientBrush(
                                                                                                                 rect,
-                                                                                                                Color.SteelBlue,
+                                                                                                                Color.Black,
                                                                                                                 Color.Black,
                                                                                                                 System.Drawing.Drawing2D.LinearGradientMode.ForwardDiagonal);
                 g.FillRectangle(brush, rect);
 
                 Pen lePen = new Pen(Color.White, 3);
 
-                //g.TranslateTransform(pictureBox1.Location.X + 1, pictureBox1.Location.Y + pictureBox1.Size.Height - 1);
-
-                //if (YMin < 0)
-                //    g.TranslateTransform(0, -(int)Math.Abs(YMin));          //transforms point-of-origin to the lower left corner of the canvas.
-
-                //if (XMin < 0)
-                //    g.TranslateTransform((int)Math.Abs(XMin), 0);
-
-                //	g.SmoothingMode = SmoothingMode.AntiAlias; 
-
+                int cc = 0;
                 foreach (var obj in Shapes)                     //iterates through the objects
                 {
                     DXFPolyline temp = (DXFPolyline)obj;
+                    if (drawList.Contains(temp.LayerIndex))
+                    {
 
-                    lePen.Color = temp.AccessContourColor;
-                    lePen.Width =(float) Math.Max(1, temp.AccessLineWidth*mainScale);
+                        if (temp.AccessContourColor.Name == "White")
+                            lePen.Color = colors[cc];
+                        else
+                            lePen.Color = temp.AccessContourColor;
+                        lePen.Width = (float)Math.Max(1, temp.AccessLineWidth * mainScale);
 
-                    
-                    if (mainScale == 0)
-                        mainScale = 1;
 
-                    temp.Draw(lePen, g, mainScale, new System.Drawing.Point((int)XMin,(int) YMin));
+                        if (mainScale == 0)
+                            mainScale = 1;
 
-                    
+                        temp.Draw(lePen, g, mainScale, new System.Drawing.Point((int)XMin, (int)YMin));
+                        cc++;
+                    }
                 }
 
                 lePen.Dispose();
@@ -143,6 +157,100 @@ namespace LabviewDXFViewer
 
 
             pictureBox1.Invalidate();
+        }
+
+        public System.Drawing.Point[] SelectedLocations
+        {
+            get
+            {
+                List<System.Drawing.Point> selected = new List<System.Drawing.Point>();
+                foreach (var obj in Shapes)                     //iterates through the objects
+                {
+                    var selec = obj.SelectedLocations;
+                    if (selec != null)
+                    {
+                        foreach (var s in selec)
+                            if (s != null)
+                                selected.Add(s);
+                    }
+                }
+                return selected.ToArray();
+            }
+        }
+        public bool Hilight(System.Drawing.Point picPoint, bool mirror, bool rotate90)
+        {
+            var x = picPoint.X / mainScale + XMin;
+            var y = picPoint.Y / mainScale + YMin;
+            var drawList = Layers.Where(it => it.Visible).Select(it => it.LayerName).ToList();
+
+            bool hitTest = false;
+            foreach (var obj in Shapes)                     //iterates through the objects
+            {
+                DXFPolyline temp = (DXFPolyline)obj;
+                if (drawList.Contains(temp.LayerIndex))
+                {
+
+                    if (temp.Highlight(new System.Drawing.Point((int)x, (int)y)))
+                    {
+                        hitTest |= true;
+                        break;
+                    }
+                }
+            }
+
+            if (rotate90)
+            {
+                foreach (var obj in Shapes)                     //iterates through the objects
+                {
+                    DXFPolyline temp = (DXFPolyline)obj;
+                    if (drawList.Contains(temp.LayerIndex))
+                    {
+
+                        if (temp.Highlight(new System.Drawing.Point(-1*(int)y, (int)x)))
+                        {
+                            hitTest |= true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (mirror)
+            {
+                foreach (var obj in Shapes)                     //iterates through the objects
+                {
+                    DXFPolyline temp = (DXFPolyline)obj;
+                    if (drawList.Contains(temp.LayerIndex))
+                    {
+
+                        if (temp.Highlight(new System.Drawing.Point(-1*(int)x,-1* (int)y)))
+                        {
+                            hitTest |= true;
+                            break;
+                        }
+                    }
+                }
+
+                if (rotate90)
+                {
+                    foreach (var obj in Shapes)                     //iterates through the objects
+                    {
+                        DXFPolyline temp = (DXFPolyline)obj;
+                        if (drawList.Contains(temp.LayerIndex))
+                        {
+
+                            if (temp.Highlight(new System.Drawing.Point((int)y, -1*(int)x)))
+                            {
+                                hitTest |= true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            return hitTest;
         }
     }
 }
