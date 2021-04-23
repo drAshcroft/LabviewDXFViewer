@@ -49,7 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Canvas.cs" />
+    <Compile Include="DataTypes\ProbeSite.cs" />
     <Compile Include="DrawingObject.cs" />
     <Compile Include="DXFCanvas.cs">
       <SubType>UserControl</SubType>

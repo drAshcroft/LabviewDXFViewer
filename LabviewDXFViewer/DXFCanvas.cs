@@ -61,13 +61,22 @@ namespace LabviewDXFViewer
 
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
-            if (Viewer.Hilight(e.Location, cbSelectionMirror.Checked, cbSelectionRotate.Checked))
+            try
             {
-                Viewer.Draw(pictureBox1);
-                if (Microsites != null)
-                    Microsites.ListData(Viewer.SelectedLocations);
+                 
+                if (Viewer!=null && Viewer.Hilight(e.Location, cbSelectionMirror.Checked, cbSelectionRotate.Checked))
+                {
+                    Viewer.Draw(pictureBox1);
+                    if (Microsites != null)
+                        Microsites.AddListData(Viewer.SelectedLocations);
+                }
             }
-            
+            catch { }
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

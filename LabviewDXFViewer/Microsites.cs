@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LabviewDXFViewer.DataTypes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,37 +20,26 @@ namespace LabviewDXFViewer
             deleteEvent = DeleteRow;
         }
 
-        public class JunctionRow
-        {
-            public string JunctionName { get; set; }
-            public string Orientation { get; set; }
-            public Point Position { get; set; }
-            public JunctionRow() { }
-            public JunctionRow(string position)
-            {
-                var parts = position.Trim().Split(',');
-                Position = new Point( int.Parse( parts[0]), int.Parse(parts[1]));
-            }
-        }
 
-        public List<JunctionRow> Rows = new List<JunctionRow>();
-        public void ListData(Point[] selectedLocations)
+
+        public List<ProbeSite> Rows = new List<ProbeSite>();
+        public void AddListData(Point[] selectedLocations)
         {
             Rows.Clear();
 
             for (int i = dataGridView1.Rows.Count - 1; i >= 0; i--)
             {
-                if (dataGridView1.Rows[i].IsNewRow==false)
+                if (dataGridView1.Rows[i].IsNewRow == false)
                     dataGridView1.Rows.RemoveAt(i);
             }
-            
-            var addData = new List<JunctionRow>();
+
+            var addData = new List<ProbeSite>();
             foreach (var point in selectedLocations)
             {
                 var hits = ExistingData.Where(x => Math.Abs(point.X - x.Position.X) < 10 && Math.Abs(point.Y - x.Position.Y) < 10).FirstOrDefault();
                 if (hits == null)
                 {
-                    var newPoint = new JunctionRow { JunctionName = "UNK", Orientation = "Horizontal", Position = point };
+                    var newPoint = new ProbeSite { JunctionName = "UNK", Orientation = "Horizontal", Position = point };
                     ExistingData.Add(newPoint);
                     addData.Add(newPoint);
                 }
@@ -59,15 +49,30 @@ namespace LabviewDXFViewer
 
             foreach (var row in addData)
             {
-                dataGridView1.Rows.Add(row.JunctionName, row.Position.X  + "," + row.Position.Y, row.Orientation);
+                dataGridView1.Rows.Add(row.JunctionName, row.Position.X + "," + row.Position.Y, row.Orientation);
             }
         }
 
 
+
+        public ProbeSite[] GetListData(ProbeOrientation Orientation)
+        {
+            var sites = new ProbeSite[dataGridView1.Rows.Count];
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                sites[i] = new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
+                {
+                    JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
+                    Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
+                };
+            }
+            return sites;
+        }
+
         private int MouseOverRow;
         private void dataGridView1_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right )
+            if (e.Button == MouseButtons.Right)
             {
                 ContextMenu m = new ContextMenu();
                 m.MenuItems.Add(new MenuItem("Delete Selected Rows", deleteEvent));
@@ -78,7 +83,7 @@ namespace LabviewDXFViewer
 
         EventHandler deleteEvent;
 
-        private void DeleteRow(object sender,EventArgs e)
+        private void DeleteRow(object sender, EventArgs e)
         {
             var selected = new List<DataGridViewRow>();
             foreach (DataGridViewRow row in dataGridView1.SelectedRows)
@@ -90,22 +95,22 @@ namespace LabviewDXFViewer
                 dataGridView1.Rows.RemoveAt(row.Index);
         }
 
-        List<JunctionRow> ExistingData = new List<JunctionRow>();
+        List<ProbeSite> ExistingData = new List<ProbeSite>();
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            var addData = new List<JunctionRow>();
+            var addData = new List<ProbeSite>();
             for (int i = dataGridView1.Rows.Count - 1; i >= 0; i--)
             {
                 if (string.IsNullOrWhiteSpace((string)dataGridView1.Rows[i].Cells[1].Value) == false)
                 {
-                    addData.Add(new JunctionRow((string)dataGridView1.Rows[i].Cells[1].Value)
+                    addData.Add(new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
                     {
                         JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
                         Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
                     });
                 }
             }
-           
+
             foreach (var point in addData)
             {
                 var hits = ExistingData.Where(x => Math.Abs(point.Position.X - x.Position.X) < 10 && Math.Abs(point.Position.Y - x.Position.Y) < 10).FirstOrDefault();
