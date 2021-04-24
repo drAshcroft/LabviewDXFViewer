@@ -31,6 +31,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.microsites1 = new LabviewDXFViewer.Microsites();
             this.dxfCanvas1 = new LabviewDXFViewer.DXFCanvas();
+            this.webCamViewer1 = new LabviewDXFViewer.WebCamViewer();
             this.SuspendLayout();
             // 
             // button1
@@ -57,14 +58,22 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dxfCanvas1.Location = new System.Drawing.Point(12, 2);
             this.dxfCanvas1.Name = "dxfCanvas1";
-            this.dxfCanvas1.Size = new System.Drawing.Size(703, 407);
+            this.dxfCanvas1.Size = new System.Drawing.Size(703, 396);
             this.dxfCanvas1.TabIndex = 1;
+            // 
+            // webCamViewer1
+            // 
+            this.webCamViewer1.Location = new System.Drawing.Point(688, 444);
+            this.webCamViewer1.Name = "webCamViewer1";
+            this.webCamViewer1.Size = new System.Drawing.Size(340, 222);
+            this.webCamViewer1.TabIndex = 3;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1100, 450);
+            this.ClientSize = new System.Drawing.Size(1100, 678);
+            this.Controls.Add(this.webCamViewer1);
             this.Controls.Add(this.microsites1);
             this.Controls.Add(this.dxfCanvas1);
             this.Controls.Add(this.button1);
@@ -79,6 +88,7 @@
         private System.Windows.Forms.Button button1;
         private DXFCanvas dxfCanvas1;
         private Microsites microsites1;
+        private WebCamViewer webCamViewer1;
     }
 }
 

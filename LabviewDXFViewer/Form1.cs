@@ -24,6 +24,10 @@ namespace LabviewDXFViewer
             var file = @"C:\Users\bashc\Downloads\2021-03-26 ORNL Single.dxf";
            // file = @"C:\Users\847695.CORPAA\Downloads\2021-04-07 Chip Pads.dxf";
             dxfCanvas1.LoadFile(file);
+
+          var cameras=   webCamViewer1.GetCameras();
+
+            webCamViewer1.InitializeCamera(cameras[0]);
         }
     }
 }

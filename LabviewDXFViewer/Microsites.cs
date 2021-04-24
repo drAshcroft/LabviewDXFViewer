@@ -57,17 +57,26 @@ namespace LabviewDXFViewer
 
         public ProbeSite[] GetListData(ProbeOrientation Orientation)
         {
+            var sOrientation = Orientation.ToString().ToLower();
             var sites = new ProbeSite[dataGridView1.Rows.Count];
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
-                sites[i] = new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
+                if (dataGridView1.Rows[i].Cells[2].Value.ToString().ToLower() == sOrientation)
                 {
-                    JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
-                    Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
-                };
+                    sites[i] = new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
+                    {
+                        JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
+                        Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
+                    };
+                }
             }
+
+            sites = sites.OrderBy(x => x.Position.Y * 10000 + x.Position.X/100).ToArray();
+
             return sites;
         }
+
+
 
         private int MouseOverRow;
         private void dataGridView1_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
