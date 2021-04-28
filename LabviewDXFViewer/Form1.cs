@@ -16,7 +16,7 @@ namespace LabviewDXFViewer
         public Form1()
         {
             InitializeComponent();
-            dxfCanvas1.Microsites = microsites1;
+            dxfCanvas1.AddSiteViewer( microsites1);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -28,6 +28,16 @@ namespace LabviewDXFViewer
           var cameras=   webCamViewer1.GetCameras();
 
             webCamViewer1.InitializeCamera(cameras[0]);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            microsites1.SaveListSites("test");
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            microsites1.LoadListSites("test");
         }
     }
 }

@@ -15,9 +15,22 @@ namespace LabviewDXFViewer
     public partial class WebCamViewer : UserControl, IDisposable
     {
 
+        public void StopCamera()
+        {
+            try
+            {
+                videoSourcePlayer.SignalToStop();
+            }
+            catch { }
+        }
+
         public new void Dispose()
         {
-            videoSourcePlayer.SignalToStop();
+            try
+            {
+                videoSourcePlayer.SignalToStop();
+            }
+            catch { }
             base.Dispose();
         }
 
@@ -28,7 +41,7 @@ namespace LabviewDXFViewer
 
 
         FilterInfoCollection VideoDevices = null;
-
+        VideoCaptureDevice VideoSource;
 
         public void InitializeCamera(string cameraName)
         {
@@ -36,19 +49,19 @@ namespace LabviewDXFViewer
                 GetCameras();
 
             var selected = VideoDevices.Where(x => x.Name == cameraName).FirstOrDefault().MonikerString;
-            var videoSource = new VideoCaptureDevice(selected);
+             VideoSource = new VideoCaptureDevice(selected);
 
             // Then, we just have to define what we would like to do once the device send 
             // us a new frame. This can be done using standard .NET events (the actual 
             // contents of the video_NewFrame method is shown at the bottom of this page)
-            videoSourcePlayer.VideoSource = videoSource;
+            videoSourcePlayer.VideoSource = VideoSource;
             videoSourcePlayer.Start();
 
         }
 
         private void VideoSource_NewFrame(object sender, Accord.Video.NewFrameEventArgs eventArgs)
         {
-          //  pictureBox1.Image = eventArgs.Frame;
+            //  pictureBox1.Image = eventArgs.Frame;
         }
         private void VideoSourcePlayer_DoubleClick(object sender, System.EventArgs e)
         {

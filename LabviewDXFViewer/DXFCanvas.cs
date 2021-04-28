@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using netDxf;
-using DXFImporter;
-using netDxf.Entities;
 
 namespace LabviewDXFViewer
 {
     public partial class DXFCanvas : UserControl
     {
 
-        public Microsites Microsites;
+        private Microsites Microsites;
+        public void AddSiteViewer(Microsites microsites)
+        {
+            microsites.Canvas = this;
+            Microsites = microsites;
+        }
         DXFView Viewer;
         public DXFCanvas()
         {
@@ -49,6 +45,17 @@ namespace LabviewDXFViewer
             Viewer.Draw(pictureBox1);
         }
 
+        public void AddListSite(int x, int y)
+        {
+            var location = new System.Drawing.Point(x, y);
+            if (Viewer != null && Viewer.HilightWaferPoint(location))
+            {
+                Viewer.Draw(pictureBox1);
+                if (Microsites != null)
+                    Microsites.AddListData(Viewer.SelectedLocations);
+            }
+        }
+
         private void lbLayerSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
             foreach (var item in lbLayerSelect.Items)
@@ -59,12 +66,35 @@ namespace LabviewDXFViewer
             Viewer.Draw(pictureBox1);
         }
 
+        public void LoadLayerActivation(string activeLayers)
+        {
+            for (var i = 0; i < lbLayerSelect.Items.Count; i++)
+            {
+                var checkedV = (activeLayers.Contains(lbLayerSelect.Items[i].ToString()));
+                ((DXFLayer)lbLayerSelect.Items[i]).Visible = checkedV;
+                lbLayerSelect.SetItemChecked(i, checkedV);
+            }
+
+            if (Viewer != null)
+                Viewer.Draw(pictureBox1);
+        }
+
+        public string SaveLayerActivation()
+        {
+            var outString = "";
+            for (var i = 0; i < lbLayerSelect.CheckedItems.Count; i++)
+            {
+                outString += lbLayerSelect.CheckedItems[i].ToString() + " ";
+            }
+            return outString;
+        }
+
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
             try
             {
-                 
-                if (Viewer!=null && Viewer.Hilight(e.Location, cbSelectionMirror.Checked, cbSelectionRotate.Checked))
+
+                if (Viewer != null && Viewer.Hilight(e.Location, cbSelectionMirror.Checked, cbSelectionRotate.Checked))
                 {
                     Viewer.Draw(pictureBox1);
                     if (Microsites != null)

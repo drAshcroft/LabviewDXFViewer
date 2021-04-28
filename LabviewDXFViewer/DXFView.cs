@@ -177,6 +177,28 @@ namespace LabviewDXFViewer
                 return selected.ToArray();
             }
         }
+
+        public bool HilightWaferPoint(System.Drawing.Point picPoint)
+        {
+            var drawList = Layers.Where(it => it.Visible).Select(it => it.LayerName).ToList();
+
+            bool hitTest = false;
+            foreach (var obj in Shapes)                     //iterates through the objects
+            {
+                DXFPolyline temp = (DXFPolyline)obj;
+                if (drawList.Contains(temp.LayerIndex))
+                {
+
+                    if (temp.Highlight(picPoint))
+                    {
+                        hitTest |= true;
+                        break;
+                    }
+                }
+            }
+            return hitTest;
+        }
+
         public bool Hilight(System.Drawing.Point picPoint, bool mirror, bool rotate90)
         {
             var x = picPoint.X / mainScale + XMin;
@@ -206,7 +228,7 @@ namespace LabviewDXFViewer
                     if (drawList.Contains(temp.LayerIndex))
                     {
 
-                        if (temp.Highlight(new System.Drawing.Point(-1*(int)y, (int)x)))
+                        if (temp.Highlight(new System.Drawing.Point(-1 * (int)y, (int)x)))
                         {
                             hitTest |= true;
                             break;
@@ -223,7 +245,7 @@ namespace LabviewDXFViewer
                     if (drawList.Contains(temp.LayerIndex))
                     {
 
-                        if (temp.Highlight(new System.Drawing.Point(-1*(int)x,-1* (int)y)))
+                        if (temp.Highlight(new System.Drawing.Point(-1 * (int)x, -1 * (int)y)))
                         {
                             hitTest |= true;
                             break;
@@ -239,7 +261,7 @@ namespace LabviewDXFViewer
                         if (drawList.Contains(temp.LayerIndex))
                         {
 
-                            if (temp.Highlight(new System.Drawing.Point((int)y, -1*(int)x)))
+                            if (temp.Highlight(new System.Drawing.Point((int)y, -1 * (int)x)))
                             {
                                 hitTest |= true;
                                 break;
