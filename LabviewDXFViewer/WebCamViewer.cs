@@ -19,7 +19,9 @@ namespace LabviewDXFViewer
         {
             try
             {
+                VideoSource.Stop();
                 videoSourcePlayer.SignalToStop();
+                VideoSource = null;
             }
             catch { }
         }
@@ -28,7 +30,9 @@ namespace LabviewDXFViewer
         {
             try
             {
+                VideoSource.Stop();
                 videoSourcePlayer.SignalToStop();
+                VideoSource = null;
             }
             catch { }
             base.Dispose();
@@ -59,9 +63,11 @@ namespace LabviewDXFViewer
 
         }
 
+        Accord.Imaging.Filters.Mirror filter = new Accord.Imaging.Filters.Mirror(true, true);
+
         private void VideoSource_NewFrame(object sender, Accord.Video.NewFrameEventArgs eventArgs)
         {
-            //  pictureBox1.Image = eventArgs.Frame;
+            eventArgs.Frame= filter.Apply(eventArgs.Frame);
         }
         private void VideoSourcePlayer_DoubleClick(object sender, System.EventArgs e)
         {
