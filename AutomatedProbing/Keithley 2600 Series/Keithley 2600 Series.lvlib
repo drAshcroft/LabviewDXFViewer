@@ -139,7 +139,7 @@
 			<Item Name="Low Level" Type="Folder">
 				<Item Name="Low Level.mnu" Type="Document" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Low Level/Low Level.mnu"/>
 				<Item Name="Print Buffer Data.vi" Type="VI" URL="../Public/Data/Low Level/Print Buffer Data.vi"/>
-				<Item Name="Print Variable.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Low Level/Print Variable.vi"/>
+				<Item Name="Print Variable.vi" Type="VI" URL="../Public/Data/Low Level/Print Variable.vi"/>
 			</Item>
 			<Item Name="Data.mnu" Type="Document" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Data.mnu"/>
 			<Item Name="Read Asynchronous Measurement (Current and Voltage).vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Read Asynchronous Measurement (Current and Voltage).vi"/>
@@ -212,7 +212,7 @@
 				<Item Name="Set Log Overwrite Method.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Utility/Log/Set Log Overwrite Method.vi"/>
 			</Item>
 			<Item Name="Script" Type="Folder">
-				<Item Name="Create Script.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Utility/Script/Create Script.vi"/>
+				<Item Name="Create Script.vi" Type="VI" URL="../Public/Utility/Script/Create Script.vi"/>
 				<Item Name="Delete Script.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Utility/Script/Delete Script.vi"/>
 				<Item Name="Get Script Source Code.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Utility/Script/Get Script Source Code.vi"/>
 				<Item Name="List Script.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Utility/Script/List Script.vi"/>

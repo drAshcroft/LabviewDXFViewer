@@ -80,7 +80,7 @@ namespace LabviewDXFViewer
         private double scaleY = 1;
         private double mainScale = 1;
 
-
+        public System.Drawing.Point[] Corners { get; set; } = new System.Drawing.Point[3];
         private void ScaleImage(int pbWidth, int pbHeight)
         {
             foreach (var shape in Shapes)
@@ -126,6 +126,20 @@ namespace LabviewDXFViewer
                                                                                                                 Color.Black,
                                                                                                                 System.Drawing.Drawing2D.LinearGradientMode.ForwardDiagonal);
                 g.FillRectangle(brush, rect);
+
+
+                var offset = new System.Drawing.Point((int)XMin, (int)YMin);
+                foreach (var corner in Corners)
+                {
+                    if (corner!=null )
+                    using (var lePen2 = new Pen(Color.Yellow, 4))
+                    {
+                        g.DrawEllipse(lePen2, (float)(corner.X - offset.X) * (float)mainScale-10, (float)(corner.Y- offset.Y) * (float)mainScale-10,20,20);
+                    }
+
+                }
+
+
 
                 Pen lePen = new Pen(Color.White, 3);
 

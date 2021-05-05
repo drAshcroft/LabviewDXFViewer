@@ -79,6 +79,7 @@ namespace LabviewDXFViewer
             var newPoint = new ProbeSite { JunctionName = junctionName, Orientation = orientation.ToString(), Position = location };
             ExistingData.Add(newPoint);
             dataGridView1.Rows.Add(newPoint.JunctionName, newPoint.Position.X + "," + newPoint.Position.Y, newPoint.Orientation);
+            GetFirstCorner(ProbeOrientation.Horizontal);
         }
         public void AddListData(Point[] selectedLocations)
         {
@@ -108,6 +109,8 @@ namespace LabviewDXFViewer
             {
                 dataGridView1.Rows.Add(row.JunctionName, row.Position.X + "," + row.Position.Y, row.Orientation);
             }
+
+            GetFirstCorner(ProbeOrientation.Horizontal);
         }
 
 
@@ -118,9 +121,9 @@ namespace LabviewDXFViewer
             var sites = new List<ProbeSite>();
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
-                if (dataGridView1.Rows[i].Cells[2].Value!=null && dataGridView1.Rows[i].Cells[2].Value.ToString().ToLower() == sOrientation)
+                if (dataGridView1.Rows[i].Cells[2].Value != null && dataGridView1.Rows[i].Cells[2].Value.ToString().ToLower() == sOrientation)
                 {
-                    sites.Add( new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
+                    sites.Add(new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
                     {
                         JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
                         Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
@@ -129,6 +132,123 @@ namespace LabviewDXFViewer
             }
 
             return sites.OrderBy(x => x.Position.Y * 10000 + x.Position.X / 100).ToArray();
+        }
+
+        public int[] GetFirstCorner(ProbeOrientation Orientation)
+        {
+            var sOrientation = Orientation.ToString().ToLower();
+            var sites = new List<ProbeSite>();
+
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                if (dataGridView1.Rows[i].Cells[2].Value != null && dataGridView1.Rows[i].Cells[2].Value.ToString().ToLower() == sOrientation)
+                {
+                    sites.Add(new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
+                    {
+                        JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
+                        Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
+                    });
+                }
+            }
+
+            var middleX = sites.Average(x => x.Position.X);
+            var middleY = sites.Average(y => y.Position.Y);
+
+            var maxX = 0d;
+            var maxI = -1;
+            for (int i = 0; i < sites.Count; i++)
+            {
+                var x = sites[i].Position.X - middleX;
+                var y = sites[i].Position.Y - middleY;
+                if (y > 0 && x < maxX)
+                {
+                    maxI = i;
+                    maxX = x;
+                }
+            }
+            if (Canvas != null)
+                Canvas.SetCorner(0, new Point((int)sites[maxI].Position.X, (int)sites[maxI].Position.Y));
+
+
+            return new int[] { (int)sites[maxI].Position.X, (int)sites[maxI].Position.Y };
+        }
+
+        public int[] GetSecondCorner(ProbeOrientation Orientation)
+        {
+            var sOrientation = Orientation.ToString().ToLower();
+            var sites = new List<ProbeSite>();
+
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                if (dataGridView1.Rows[i].Cells[2].Value != null && dataGridView1.Rows[i].Cells[2].Value.ToString().ToLower() == sOrientation)
+                {
+                    sites.Add(new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
+                    {
+                        JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
+                        Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
+                    });
+                }
+            }
+
+            var middleX = sites.Average(x => x.Position.X);
+            var middleY = sites.Average(y => y.Position.Y);
+
+            var maxX = 0d;
+            var maxI = -1;
+            for (int i = 0; i < sites.Count; i++)
+            {
+                var x = sites[i].Position.X - middleX;
+                var y = sites[i].Position.Y - middleY;
+                if (y > 0 && x > maxX)
+                {
+                    maxI = i;
+                    maxX = x;
+                }
+            }
+            if (Canvas != null)
+                Canvas.SetCorner(1, new Point((int)sites[maxI].Position.X, (int)sites[maxI].Position.Y));
+
+
+            return new int[] { (int)sites[maxI].Position.X, (int)sites[maxI].Position.Y };
+        }
+
+        public int[] GetThirdCorner(ProbeOrientation Orientation)
+        {
+            var sOrientation = Orientation.ToString().ToLower();
+            var sites = new List<ProbeSite>();
+
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                if (dataGridView1.Rows[i].Cells[2].Value != null && dataGridView1.Rows[i].Cells[2].Value.ToString().ToLower() == sOrientation)
+                {
+                    sites.Add(new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
+                    {
+                        JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
+                        Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
+                    });
+                }
+            }
+
+            var middleX = sites.Average(x => x.Position.X);
+            var middleY = sites.Average(y => y.Position.Y);
+
+            var maxY = 0d;
+            var maxI = -1;
+            for (int i = 0; i < sites.Count; i++)
+            {
+                var x = sites[i].Position.X - middleX;
+                var y = sites[i].Position.Y - middleY;
+                if (y > maxY)
+                {
+                    maxI = i;
+                    maxY = y;
+                }
+            }
+
+            if (Canvas != null)
+                Canvas.SetCorner(2, new Point((int)sites[maxI].Position.X, (int)sites[maxI].Position.Y));
+
+            return new int[] { (int)sites[maxI].Position.X, (int)sites[maxI].Position.Y };
         }
 
 

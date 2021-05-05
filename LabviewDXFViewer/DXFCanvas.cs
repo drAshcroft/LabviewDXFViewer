@@ -31,6 +31,16 @@ namespace LabviewDXFViewer
                 Viewer.Draw(pictureBox1);
         }
 
+        public void SetCorner(int cornerNumber, Point Coords)
+        {
+            if (Viewer != null)
+            {
+                Viewer.Corners[cornerNumber] = Coords;
+
+                Viewer.Draw(pictureBox1);
+            }
+        }
+
         public void LoadFile(string filename)
         {
             Viewer = new DXFView();
