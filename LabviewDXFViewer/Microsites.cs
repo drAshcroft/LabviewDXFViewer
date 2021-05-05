@@ -151,8 +151,8 @@ namespace LabviewDXFViewer
                 }
             }
 
-            var middleX = sites.Average(x => x.Position.X);
-            var middleY = sites.Average(y => y.Position.Y);
+            var middleX = 0;// sites.Average(x => x.Position.X);
+            var middleY = 0;// sites.Average(y => y.Position.Y);
 
             var maxX = 0d;
             var maxI = -1;
@@ -160,13 +160,19 @@ namespace LabviewDXFViewer
             {
                 var x = sites[i].Position.X - middleX;
                 var y = sites[i].Position.Y - middleY;
-                if (y > 0 && x < maxX)
+                if (y < 0 && x < maxX)
                 {
                     maxI = i;
                     maxX = x;
                 }
             }
-            if (Canvas != null)
+
+            if (maxI==-1)
+            {
+                return new int[] { 0,0 };
+            }
+
+            if ( Canvas != null)
                 Canvas.SetCorner(0, new Point((int)sites[maxI].Position.X, (int)sites[maxI].Position.Y));
 
 
@@ -190,8 +196,8 @@ namespace LabviewDXFViewer
                 }
             }
 
-            var middleX = sites.Average(x => x.Position.X);
-            var middleY = sites.Average(y => y.Position.Y);
+            var middleX = 0;// sites.Average(x => x.Position.X);
+            var middleY = 0;// sites.Average(y => y.Position.Y);
 
             var maxX = 0d;
             var maxI = -1;
@@ -199,11 +205,16 @@ namespace LabviewDXFViewer
             {
                 var x = sites[i].Position.X - middleX;
                 var y = sites[i].Position.Y - middleY;
-                if (y > 0 && x > maxX)
+                if (y < 0 && x > maxX)
                 {
                     maxI = i;
                     maxX = x;
                 }
+            }
+
+            if (maxI == -1)
+            {
+                return new int[] { 0, 0 };
             }
             if (Canvas != null)
                 Canvas.SetCorner(1, new Point((int)sites[maxI].Position.X, (int)sites[maxI].Position.Y));
@@ -229,8 +240,9 @@ namespace LabviewDXFViewer
                 }
             }
 
-            var middleX = sites.Average(x => x.Position.X);
-            var middleY = sites.Average(y => y.Position.Y);
+            var middleX = 0;// sites.Average(x => x.Position.X);
+            var middleY = 0;// sites.Average(y => y.Position.Y);
+
 
             var maxY = 0d;
             var maxI = -1;
@@ -243,6 +255,11 @@ namespace LabviewDXFViewer
                     maxI = i;
                     maxY = y;
                 }
+            }
+
+            if (maxI == -1)
+            {
+                return new int[] { 0, 0 };
             }
 
             if (Canvas != null)

@@ -131,11 +131,11 @@ namespace LabviewDXFViewer
                 var offset = new System.Drawing.Point((int)XMin, (int)YMin);
                 foreach (var corner in Corners)
                 {
-                    if (corner!=null )
-                    using (var lePen2 = new Pen(Color.Yellow, 4))
-                    {
-                        g.DrawEllipse(lePen2, (float)(corner.X - offset.X) * (float)mainScale-10, (float)(corner.Y- offset.Y) * (float)mainScale-10,20,20);
-                    }
+                    if (corner != null && corner.X != 0 && corner.Y != 0)
+                        using (var lePen2 = new Pen(Color.Yellow, 4))
+                        {
+                            g.DrawEllipse(lePen2, (float)(corner.X - offset.X) * (float)mainScale - 10, (float)(corner.Y - offset.Y) * (float)mainScale - 10, 20, 20);
+                        }
 
                 }
 
