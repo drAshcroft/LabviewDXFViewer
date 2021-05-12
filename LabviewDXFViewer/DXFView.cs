@@ -107,14 +107,14 @@ namespace LabviewDXFViewer
             mainScale = Math.Min(scaleX, scaleY);
         }
 
-        public void Draw(PictureBox pictureBox1)
+        public void Draw(System.Drawing.Image pictureBox1)
         {
-            ScaleImage(pictureBox1.Image.Width, pictureBox1.Image.Height);
+            ScaleImage(pictureBox1.Width, pictureBox1.Height);
 
             var drawList = Layers.Where(x => x.Visible).Select(x => x.LayerName).ToList();
             var colors = Enum.GetNames(typeof(KnownColor)).Where(item => !item.StartsWith("Control")).OrderBy(item => item).Select(x => Color.FromName(x)).ToArray();
 
-            using (var g = Graphics.FromImage(pictureBox1.Image))
+            using (var g = Graphics.FromImage(pictureBox1))
             {
 
                 Rectangle rect = new Rectangle(0, 0, pictureBox1.Size.Width, pictureBox1.Size.Height);
@@ -170,7 +170,7 @@ namespace LabviewDXFViewer
             }
 
 
-            pictureBox1.Invalidate();
+          
         }
 
         public System.Drawing.Point[] SelectedLocations

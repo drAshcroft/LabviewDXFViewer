@@ -28,7 +28,8 @@ namespace LabviewDXFViewer
             pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
 
             if (Viewer != null)
-                Viewer.Draw(pictureBox1);
+                Viewer.Draw(pictureBox1.Image);
+            pictureBox1.Invalidate();
         }
 
         public void SetCorner(int cornerNumber, Point Coords)
@@ -37,7 +38,9 @@ namespace LabviewDXFViewer
             {
                 Viewer.Corners[cornerNumber] = Coords;
 
-                Viewer.Draw(pictureBox1);
+                if (Viewer != null)
+                    Viewer.Draw(pictureBox1.Image);
+                pictureBox1.Invalidate();
             }
         }
 
@@ -52,7 +55,9 @@ namespace LabviewDXFViewer
             for (int i = 0; i < lbLayerSelect.Items.Count; i++)
                 lbLayerSelect.SetItemChecked(i, true);
 
-            Viewer.Draw(pictureBox1);
+            if (Viewer != null)
+                Viewer.Draw(pictureBox1.Image);
+            pictureBox1.Invalidate();
         }
 
         public void AddListSite(int x, int y)
@@ -60,7 +65,9 @@ namespace LabviewDXFViewer
             var location = new System.Drawing.Point(x, y);
             if (Viewer != null && Viewer.HilightWaferPoint(location))
             {
-                Viewer.Draw(pictureBox1);
+                if (Viewer != null)
+                    Viewer.Draw(pictureBox1.Image);
+                pictureBox1.Invalidate();
                 if (Microsites != null)
                     Microsites.AddListData(Viewer.SelectedLocations);
             }
@@ -73,7 +80,9 @@ namespace LabviewDXFViewer
             foreach (var item in lbLayerSelect.CheckedItems)
                 ((DXFLayer)item).Visible = true;
 
-            Viewer.Draw(pictureBox1);
+            if (Viewer != null)
+                Viewer.Draw(pictureBox1.Image);
+            pictureBox1.Invalidate();
         }
 
         public void LoadLayerActivation(string activeLayers)
@@ -85,8 +94,10 @@ namespace LabviewDXFViewer
                 lbLayerSelect.SetItemChecked(i, checkedV);
             }
 
+
             if (Viewer != null)
-                Viewer.Draw(pictureBox1);
+                Viewer.Draw(pictureBox1.Image);
+            pictureBox1.Invalidate();
         }
 
         public string SaveLayerActivation()
@@ -103,10 +114,10 @@ namespace LabviewDXFViewer
         {
             try
             {
-
                 if (Viewer != null && Viewer.Hilight(e.Location, cbSelectionMirror.Checked, cbSelectionRotate.Checked))
                 {
-                    Viewer.Draw(pictureBox1);
+                    Viewer.Draw(pictureBox1.Image);
+                    pictureBox1.Invalidate();
                     if (Microsites != null)
                         Microsites.AddListData(Viewer.SelectedLocations);
                 }
