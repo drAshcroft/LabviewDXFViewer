@@ -43,9 +43,10 @@ namespace LabviewDXFViewer
                 pictureBox1.Invalidate();
             }
         }
-
+        public string Filename;
         public void LoadFile(string filename)
         {
+            Filename = filename;
             Viewer = new DXFView();
             Viewer.LoadFile(filename);
 
@@ -106,6 +107,16 @@ namespace LabviewDXFViewer
             for (var i = 0; i < lbLayerSelect.CheckedItems.Count; i++)
             {
                 outString += lbLayerSelect.CheckedItems[i].ToString() + " ";
+            }
+            return outString;
+        }
+
+        public string SaveLayerActivationDelimited()
+        {
+            var outString = "";
+            for (var i = 0; i < lbLayerSelect.CheckedItems.Count; i++)
+            {
+                outString += lbLayerSelect.CheckedItems[i].ToString() + "||";
             }
             return outString;
         }

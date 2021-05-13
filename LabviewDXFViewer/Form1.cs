@@ -17,34 +17,61 @@ namespace LabviewDXFViewer
         public Form1()
         {
             InitializeComponent();
-            dxfCanvas1.AddSiteViewer( microsites1);
-
-
-
-           
-
-         
+            dxfCanvas1.AddSiteViewer(microsites1);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var file = @"C:\Users\bashc\Downloads\2021-03-26 ORNL Single.dxf";
-           // file = @"C:\Users\847695.CORPAA\Downloads\2021-04-07 Chip Pads.dxf";
-            dxfCanvas1.LoadFile(file);
+            try
+            {
+                System.Windows.Forms.OpenFileDialog openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+                openFileDialog1.Title = "Open DXF file";
+                openFileDialog1.DefaultExt = "txt";
+                openFileDialog1.Filter = "dxf files (*.dxf)|*.dxf";
 
-          var cameras=   webCamViewer1.GetCameras();
+                if (openFileDialog1.ShowDialog() != DialogResult.Cancel)
+                {
+                    // file = @"C:\Users\847695.CORPAA\Downloads\2021-04-07 Chip Pads.dxf";
+                    dxfCanvas1.LoadFile(openFileDialog1.FileName);
+                }
+            }
+            catch
+            {
 
-            webCamViewer1.InitializeCamera(cameras[0]);
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            microsites1.SaveListSites("test");
+            try
+            {
+                microsites1.SaveListSitesCloud(comboBox1.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            microsites1.LoadListSites("test");
+            try
+            {
+                microsites1.LoadListSitesCloud(comboBox1.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                comboBox1.Items.AddRange(microsites1.LoadWaferPlansCloud());
+            }
+            catch { }
         }
     }
 }

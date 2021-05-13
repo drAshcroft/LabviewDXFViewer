@@ -5,12 +5,16 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Windows.Forms;
+using Flurl;
+using Flurl.Http;
 
 namespace LabviewDXFViewer
 {
     public partial class Microsites : UserControl
     {
+        public static string WebHost = "https://raxdatastore.azurewebsites.net/api/";
         public Microsites()
         {
             InitializeComponent();
@@ -21,6 +25,71 @@ namespace LabviewDXFViewer
 
 
         public List<ProbeSite> Rows = new List<ProbeSite>();
+
+        public class WaferInfo
+        {
+            public string waferName { get; set; }
+            public ProbeSite[] probes { get; set; }
+            public string activeLayer { get; set; }
+
+            public string uploadedDate { get; set; }
+        }
+
+        public void SaveListSitesCloud(string waferName)
+        {
+
+            var saveData = new WaferInfo
+            {
+                activeLayer = Canvas.SaveLayerActivationDelimited(),
+                probes = GetListData(),
+                waferName = waferName
+            };
+
+            var result = (WebHost + "WaferTestSiteLoad?code=dG3i8BEApZF3cS00grJdfbpClSsPfPJ9oH2lLa4FyLtcReGbrmyp0w==").PostJsonAsync(saveData).Result;
+
+        }
+
+        public string[] LoadWaferPlansCloud()
+        {
+            var result = (WebHost + "WaferPlanNames?code=SZ7L74ejL0kPdEXzzjsz7eHToJ/JoEd80ocG5DEbaqE3mv4sdO6euA==").GetJsonAsync<string[]>().Result;
+            return result;
+        }
+
+        public void LoadListSitesCloud(string waferName)
+        {
+
+            var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\SPSProbes";
+            if (Directory.Exists(dir) == false)
+                Directory.CreateDirectory(dir);
+
+            var filename = dir + "\\" + waferName + ".dxf";
+
+            var dxf = (WebHost + "WaferPlanDXFView?WaferName=" + waferName + "&code=BdTxfpvmw2aahMiFoXpPgHHxyuUv8yq5Svd3BmcinOAaGLkNtXJayQ==").GetStreamAsync().Result;
+            using (var fileStream = File.Create(filename))
+            {
+                dxf.CopyTo(fileStream);
+            }
+            Canvas.LoadFile(filename);
+
+            var result = (WebHost + "WaferTestSiteView?WaferName=" + waferName + "&code=7qEXL895pHq3Sl9YRkamCvsoCAoVcacaz0OFLx5uM2/m9tc8eWo5hA==").GetJsonAsync<WaferInfo>().Result;
+
+            var addData = new List<ProbeSite>();
+            Canvas.LoadLayerActivation(result.activeLayer.Replace("||", " "));
+
+            if (result.probes != null)
+            {
+                for (int lineI = 0; lineI < result.probes.Length; lineI++)
+                {
+                    var newPoint = result.probes[lineI];
+                    ExistingData.Add(newPoint);
+                    addData.Add(newPoint);
+                }
+                foreach (var point in addData)
+                {
+                    Canvas.AddListSite(point.Position.X, point.Position.Y);
+                }
+            }
+        }
 
 
         public void SaveListSites(string waferName)
@@ -110,7 +179,24 @@ namespace LabviewDXFViewer
             GetFirstCorner(ProbeOrientation.Horizontal);
         }
 
+        public ProbeSite[] GetListData()
+        {
+            var sOrientation = Orientation.ToString().ToLower();
+            var sites = new List<ProbeSite>();
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                if (dataGridView1.Rows[i].Cells[2].Value != null)
+                {
+                    sites.Add(new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
+                    {
+                        JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
+                        Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
+                    });
+                }
+            }
 
+            return sites.OrderBy(x => x.Position.Y * 10000 + x.Position.X / 100).ToArray();
+        }
 
         public ProbeSite[] GetListData(ProbeOrientation Orientation)
         {
@@ -164,12 +250,12 @@ namespace LabviewDXFViewer
                 }
             }
 
-            if (maxI==-1)
+            if (maxI == -1)
             {
-                return new int[] { 0,0 };
+                return new int[] { 0, 0 };
             }
 
-            if ( Canvas != null)
+            if (Canvas != null)
                 Canvas.SetCorner(0, new Point((int)sites[maxI].Position.X, (int)sites[maxI].Position.Y));
 
 
