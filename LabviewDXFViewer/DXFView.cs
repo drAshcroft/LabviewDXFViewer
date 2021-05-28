@@ -81,6 +81,8 @@ namespace LabviewDXFViewer
         private double mainScale = 1;
 
         public System.Drawing.Point[] Corners { get; set; } = new System.Drawing.Point[3];
+
+        public System.Drawing.Point Marker { get; set; } = new System.Drawing.Point();
         private void ScaleImage(int pbWidth, int pbHeight)
         {
             foreach (var shape in Shapes)
@@ -139,7 +141,14 @@ namespace LabviewDXFViewer
 
                 }
 
+                if (Marker!=null && Marker.X!=0 && Marker.Y!=0)
+                {
+                    using (var lePen2 = new Pen(Color.AliceBlue, 4))
+                    {
+                        g.DrawEllipse(lePen2, (float)(Marker.X - offset.X) * (float)mainScale - 10, (float)(Marker.Y - offset.Y) * (float)mainScale - 10, 20, 20);
+                    }
 
+                }
 
                 Pen lePen = new Pen(Color.White, 3);
 
@@ -178,6 +187,7 @@ namespace LabviewDXFViewer
             get
             {
                 List<System.Drawing.Point> selected = new List<System.Drawing.Point>();
+                
                 foreach (var obj in Shapes)                     //iterates through the objects
                 {
                     var selec = obj.SelectedLocations;
@@ -188,7 +198,10 @@ namespace LabviewDXFViewer
                                 selected.Add(s);
                     }
                 }
-                return selected.ToArray();
+
+                
+
+                return selected.OrderBy(x => x.Y * 10000 + x.X).ToArray();
             }
         }
 

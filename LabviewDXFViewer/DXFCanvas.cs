@@ -43,6 +43,19 @@ namespace LabviewDXFViewer
                 pictureBox1.Invalidate();
             }
         }
+
+        public void SetMarker(Point Coords)
+        {
+            if (Viewer != null)
+            {
+                Viewer.Marker = Coords;
+
+                if (Viewer != null)
+                    Viewer.Draw(pictureBox1.Image);
+                pictureBox1.Invalidate();
+            }
+        }
+
         public string Filename;
         public void LoadFile(string filename)
         {

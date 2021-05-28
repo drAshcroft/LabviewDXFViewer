@@ -33,6 +33,7 @@ namespace LabviewDXFViewer
             this.JunctionName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Position = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Orientation = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -42,7 +43,8 @@ namespace LabviewDXFViewer
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.JunctionName,
             this.Position,
-            this.Orientation});
+            this.Orientation,
+            this.Result});
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Name = "dataGridView1";
@@ -50,6 +52,8 @@ namespace LabviewDXFViewer
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
             this.dataGridView1.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseUp);
+            this.dataGridView1.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_RowEnter);
+            this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             // 
             // JunctionName
             // 
@@ -69,6 +73,11 @@ namespace LabviewDXFViewer
             "Vertical"});
             this.Orientation.Name = "Orientation";
             // 
+            // Result
+            // 
+            this.Result.HeaderText = "Results";
+            this.Result.Name = "Result";
+            // 
             // Microsites
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -87,5 +96,6 @@ namespace LabviewDXFViewer
         private System.Windows.Forms.DataGridViewTextBoxColumn JunctionName;
         private System.Windows.Forms.DataGridViewTextBoxColumn Position;
         private System.Windows.Forms.DataGridViewComboBoxColumn Orientation;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Result;
     }
 }

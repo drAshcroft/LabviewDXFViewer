@@ -92,6 +92,9 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="ScintillaNET, Version=4.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\fernandreu.ScintillaNET.4.0.4\lib\net461\ScintillaNET.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -109,6 +112,36 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataTypes\ProbeSite.cs" />
+    <Compile Include="UpButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UpButton.Designer.cs">
+      <DependentUpon>UpButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LeftButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LeftButton.Designer.cs">
+      <DependentUpon>LeftButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RightButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RightButton.Designer.cs">
+      <DependentUpon>RightButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RaiseButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RaiseButton.Designer.cs">
+      <DependentUpon>RaiseButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LowerButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LowerButton.Designer.cs">
+      <DependentUpon>LowerButton.cs</DependentUpon>
+    </Compile>
     <Compile Include="DrawingObject.cs" />
     <Compile Include="DXFCanvas.cs">
       <SubType>UserControl</SubType>
@@ -122,6 +155,18 @@
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DownButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DownButton.Designer.cs">
+      <DependentUpon>DownButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Joystick2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Joystick2.Designer.cs">
+      <DependentUpon>Joystick2.cs</DependentUpon>
     </Compile>
     <Compile Include="Joystick.cs">
       <SubType>UserControl</SubType>
@@ -138,17 +183,44 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shapes.cs" />
+    <Compile Include="TextEditer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TextEditer.Designer.cs">
+      <DependentUpon>TextEditer.cs</DependentUpon>
+    </Compile>
     <Compile Include="WebCamViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="WebCamViewer.Designer.cs">
       <DependentUpon>WebCamViewer.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="UpButton.resx">
+      <DependentUpon>UpButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LeftButton.resx">
+      <DependentUpon>LeftButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RightButton.resx">
+      <DependentUpon>RightButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RaiseButton.resx">
+      <DependentUpon>RaiseButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LowerButton.resx">
+      <DependentUpon>LowerButton.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DXFCanvas.resx">
       <DependentUpon>DXFCanvas.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DownButton.resx">
+      <DependentUpon>DownButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Joystick2.resx">
+      <DependentUpon>Joystick2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Joystick.resx">
       <DependentUpon>Joystick.cs</DependentUpon>
@@ -166,6 +238,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="TextEditer.resx">
+      <DependentUpon>TextEditer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WebCamViewer.resx">
       <DependentUpon>WebCamViewer.cs</DependentUpon>
     </EmbeddedResource>
@@ -184,6 +259,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="images\down.png" />
+    <Content Include="images\downB.png" />
+    <Content Include="images\left.png" />
+    <Content Include="images\leftB.png" />
+    <Content Include="images\right.png" />
+    <Content Include="images\rightB.png" />
+    <Content Include="images\up.png" />
+    <Content Include="images\upB.png" />
     <Content Include="License-LGPL.txt" />
   </ItemGroup>
   <ItemGroup>

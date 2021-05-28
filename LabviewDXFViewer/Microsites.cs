@@ -9,6 +9,9 @@ using System.Net;
 using System.Windows.Forms;
 using Flurl;
 using Flurl.Http;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
 
 namespace LabviewDXFViewer
 {
@@ -49,12 +52,60 @@ namespace LabviewDXFViewer
 
         }
 
+        public string SaveListSitesLV(string waferName)
+        {
+
+            var saveData = new WaferInfo
+            {
+                activeLayer = Canvas.SaveLayerActivationDelimited(),
+                probes = GetListData(),
+                waferName = waferName
+            };
+
+            return JsonConvert.SerializeObject(saveData);
+
+        }
+
+        static HttpClient client = new HttpClient();
+
         public string[] LoadWaferPlansCloud()
         {
             var result = (WebHost + "WaferPlanNames?code=SZ7L74ejL0kPdEXzzjsz7eHToJ/JoEd80ocG5DEbaqE3mv4sdO6euA==").GetJsonAsync<string[]>().Result;
             return result;
-        }
 
+        }
+        public string LoadListSitesLV(string waferName, string dxfFile, string waferTestInfos)
+        {
+
+            var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\SPSProbes";
+            if (Directory.Exists(dir) == false)
+                Directory.CreateDirectory(dir);
+
+            var filename = dir + "\\" + waferName + ".dxf";
+
+            File.WriteAllText(filename, dxfFile);
+            Canvas.LoadFile(filename);
+
+            var result = JsonConvert.DeserializeObject<WaferInfo>(waferTestInfos);
+
+            var addData = new List<ProbeSite>();
+            Canvas.LoadLayerActivation(result.activeLayer.Replace("||", " "));
+
+            if (result.probes != null)
+            {
+                for (int lineI = 0; lineI < result.probes.Length; lineI++)
+                {
+                    var newPoint = result.probes[lineI];
+                    ExistingData.Add(newPoint);
+                    addData.Add(newPoint);
+                }
+                foreach (var point in addData)
+                {
+                    Canvas.AddListSite(point.Position.X, point.Position.Y);
+                }
+            }
+            return filename;
+        }
         public void LoadListSitesCloud(string waferName)
         {
 
@@ -147,6 +198,15 @@ namespace LabviewDXFViewer
             dataGridView1.Rows.Add(newPoint.JunctionName, newPoint.Position.X + "," + newPoint.Position.Y, newPoint.Orientation);
             GetFirstCorner(ProbeOrientation.Horizontal);
         }
+        public void AddResult(ProbeSite site, string result)
+        {
+            for (int i = dataGridView1.Rows.Count - 1; i >= 0; i--)
+            {
+                if (dataGridView1.Rows[i].Cells[0].Value.ToString() == site.JunctionName)
+                    dataGridView1.Rows[i].Cells[3].Value = result;
+            }
+        }
+
         public void AddListData(Point[] selectedLocations)
         {
             Rows.Clear();
@@ -163,7 +223,7 @@ namespace LabviewDXFViewer
                 var hits = ExistingData.Where(x => Math.Abs(point.X - x.Position.X) < 10 && Math.Abs(point.Y - x.Position.Y) < 10).FirstOrDefault();
                 if (hits == null)
                 {
-                    var newPoint = new ProbeSite { JunctionName = "UNK", Orientation = "Horizontal", Position = point };
+                    var newPoint = new ProbeSite { JunctionName = "UNK"+ ExistingData.Count, Orientation = "Horizontal", Position = point };
                     ExistingData.Add(newPoint);
                     addData.Add(newPoint);
                 }
@@ -173,7 +233,7 @@ namespace LabviewDXFViewer
 
             foreach (var row in addData)
             {
-                dataGridView1.Rows.Add(row.JunctionName, row.Position.X + "," + row.Position.Y, row.Orientation);
+                dataGridView1.Rows.Add(row.JunctionName, row.Position.X + "," + row.Position.Y, row.Orientation,"");
             }
 
             GetFirstCorner(ProbeOrientation.Horizontal);
@@ -407,6 +467,27 @@ namespace LabviewDXFViewer
                     hits.JunctionName = point.JunctionName;
                     hits.Orientation = point.Orientation;
                 }
+            }
+        }
+
+        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            var i = e.RowIndex;
+
+            if (string.IsNullOrWhiteSpace((string)dataGridView1.Rows[i].Cells[1].Value) == false)
+            {
+                var selected = new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
+                {
+                    JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
+                    Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
+                };
+
+                Canvas.SetMarker(selected.Position);
             }
         }
     }
