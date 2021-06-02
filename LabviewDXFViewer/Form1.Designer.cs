@@ -34,7 +34,6 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.microsites1 = new LabviewDXFViewer.Microsites();
             this.dxfCanvas1 = new LabviewDXFViewer.DXFCanvas();
-            this.joystick21 = new LabviewDXFViewer.Joystick2();
             this.SuspendLayout();
             // 
             // button1
@@ -93,31 +92,11 @@
             this.dxfCanvas1.Size = new System.Drawing.Size(703, 386);
             this.dxfCanvas1.TabIndex = 1;
             // 
-            // joystick21
-            // 
-            this.joystick21.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.joystick21.DownMore = false;
-            this.joystick21.DownMove = false;
-            this.joystick21.HomeMove = false;
-            this.joystick21.LeftMore = false;
-            this.joystick21.LeftMove = false;
-            this.joystick21.LoadMove = false;
-            this.joystick21.Location = new System.Drawing.Point(218, 75);
-            this.joystick21.Name = "joystick21";
-            this.joystick21.RightMore = false;
-            this.joystick21.RightMove = false;
-            this.joystick21.Size = new System.Drawing.Size(360, 318);
-            this.joystick21.TabIndex = 8;
-            this.joystick21.UpMore = false;
-            this.joystick21.UpMove = false;
-            this.joystick21.ZeroMove = false;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1100, 477);
-            this.Controls.Add(this.joystick21);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
@@ -139,7 +118,6 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.ComboBox comboBox1;
-        private Joystick2 joystick21;
     }
 }
 

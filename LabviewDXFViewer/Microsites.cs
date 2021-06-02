@@ -198,12 +198,20 @@ namespace LabviewDXFViewer
             dataGridView1.Rows.Add(newPoint.JunctionName, newPoint.Position.X + "," + newPoint.Position.Y, newPoint.Orientation);
             GetFirstCorner(ProbeOrientation.Horizontal);
         }
+
         public void AddResult(ProbeSite site, string result)
         {
             for (int i = dataGridView1.Rows.Count - 1; i >= 0; i--)
             {
-                if (dataGridView1.Rows[i].Cells[0].Value.ToString() == site.JunctionName)
-                    dataGridView1.Rows[i].Cells[3].Value = result;
+                try
+                {
+                    if (dataGridView1.Rows[i].Cells[0].Value.ToString() == site.JunctionName)
+                    {
+                        dataGridView1.Rows[i].Cells[3].Value = result;
+                        dataGridView1.Rows[i].Selected = true;
+                    }
+                }
+                catch { }
             }
         }
 

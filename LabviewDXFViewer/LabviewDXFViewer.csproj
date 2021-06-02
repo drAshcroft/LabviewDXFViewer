@@ -112,35 +112,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataTypes\ProbeSite.cs" />
-    <Compile Include="UpButton.cs">
+    <Compile Include="ImageButton.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UpButton.Designer.cs">
-      <DependentUpon>UpButton.cs</DependentUpon>
-    </Compile>
-    <Compile Include="LeftButton.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="LeftButton.Designer.cs">
-      <DependentUpon>LeftButton.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RightButton.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="RightButton.Designer.cs">
-      <DependentUpon>RightButton.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RaiseButton.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="RaiseButton.Designer.cs">
-      <DependentUpon>RaiseButton.cs</DependentUpon>
-    </Compile>
-    <Compile Include="LowerButton.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="LowerButton.Designer.cs">
-      <DependentUpon>LowerButton.cs</DependentUpon>
+    <Compile Include="ImageButton.Designer.cs">
+      <DependentUpon>ImageButton.cs</DependentUpon>
     </Compile>
     <Compile Include="DrawingObject.cs" />
     <Compile Include="DXFCanvas.cs">
@@ -155,12 +131,6 @@
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DownButton.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="DownButton.Designer.cs">
-      <DependentUpon>DownButton.cs</DependentUpon>
     </Compile>
     <Compile Include="Joystick2.cs">
       <SubType>UserControl</SubType>
@@ -195,29 +165,14 @@
     <Compile Include="WebCamViewer.Designer.cs">
       <DependentUpon>WebCamViewer.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="UpButton.resx">
-      <DependentUpon>UpButton.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="LeftButton.resx">
-      <DependentUpon>LeftButton.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RightButton.resx">
-      <DependentUpon>RightButton.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RaiseButton.resx">
-      <DependentUpon>RaiseButton.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="LowerButton.resx">
-      <DependentUpon>LowerButton.cs</DependentUpon>
+    <EmbeddedResource Include="ImageButton.resx">
+      <DependentUpon>ImageButton.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DXFCanvas.resx">
       <DependentUpon>DXFCanvas.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DownButton.resx">
-      <DependentUpon>DownButton.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Joystick2.resx">
       <DependentUpon>Joystick2.cs</DependentUpon>
@@ -261,13 +216,26 @@
   <ItemGroup>
     <Content Include="images\down.png" />
     <Content Include="images\downB.png" />
+    <None Include="images\downS.png" />
+    <None Include="images\home.png" />
+    <None Include="images\home2.png" />
     <Content Include="images\left.png" />
     <Content Include="images\leftB.png" />
+    <None Include="images\leftS.png" />
+    <None Include="images\load.png" />
+    <None Include="images\lower.png" />
+    <None Include="images\raise.png" />
+    <None Include="images\pause.png" />
+    <None Include="images\play.png" />
     <Content Include="images\right.png" />
     <Content Include="images\rightB.png" />
+    <None Include="images\rightS.png" />
     <Content Include="images\up.png" />
     <Content Include="images\upB.png" />
+    <None Include="images\upS.png" />
+    <None Include="images\zero.png" />
     <Content Include="License-LGPL.txt" />
+    <None Include="Resources\right.bmp" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
