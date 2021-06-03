@@ -498,5 +498,10 @@ namespace LabviewDXFViewer
                 Canvas.SetMarker(selected.Position);
             }
         }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }

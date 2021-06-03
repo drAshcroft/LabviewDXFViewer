@@ -34,6 +34,9 @@ namespace LabviewDXFViewer
             this.Position = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Orientation = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Intercept = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Capacitance = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -44,12 +47,16 @@ namespace LabviewDXFViewer
             this.JunctionName,
             this.Position,
             this.Orientation,
-            this.Result});
+            this.Result,
+            this.Intercept,
+            this.Capacitance,
+            this.Area});
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(436, 511);
             this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
             this.dataGridView1.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseUp);
             this.dataGridView1.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_RowEnter);
@@ -75,8 +82,23 @@ namespace LabviewDXFViewer
             // 
             // Result
             // 
-            this.Result.HeaderText = "Results";
+            this.Result.HeaderText = "Resistance";
             this.Result.Name = "Result";
+            // 
+            // Intercept
+            // 
+            this.Intercept.HeaderText = "Intercept";
+            this.Intercept.Name = "Intercept";
+            // 
+            // Capacitance
+            // 
+            this.Capacitance.HeaderText = "Capacitance";
+            this.Capacitance.Name = "Capacitance";
+            // 
+            // Area
+            // 
+            this.Area.HeaderText = "Area";
+            this.Area.Name = "Area";
             // 
             // Microsites
             // 
@@ -97,5 +119,8 @@ namespace LabviewDXFViewer
         private System.Windows.Forms.DataGridViewTextBoxColumn Position;
         private System.Windows.Forms.DataGridViewComboBoxColumn Orientation;
         private System.Windows.Forms.DataGridViewTextBoxColumn Result;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Intercept;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Capacitance;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Area;
     }
 }
