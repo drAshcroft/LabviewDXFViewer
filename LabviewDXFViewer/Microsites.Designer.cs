@@ -34,8 +34,8 @@ namespace LabviewDXFViewer
             this.Position = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Orientation = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Intercept = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Capacitance = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Intercept = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -48,8 +48,8 @@ namespace LabviewDXFViewer
             this.Position,
             this.Orientation,
             this.Result,
-            this.Intercept,
             this.Capacitance,
+            this.Intercept,
             this.Area});
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
@@ -82,18 +82,18 @@ namespace LabviewDXFViewer
             // 
             // Result
             // 
-            this.Result.HeaderText = "Resistance";
+            this.Result.HeaderText = "Conductance";
             this.Result.Name = "Result";
-            // 
-            // Intercept
-            // 
-            this.Intercept.HeaderText = "Intercept";
-            this.Intercept.Name = "Intercept";
             // 
             // Capacitance
             // 
             this.Capacitance.HeaderText = "Capacitance";
             this.Capacitance.Name = "Capacitance";
+            // 
+            // Intercept
+            // 
+            this.Intercept.HeaderText = "Intercept";
+            this.Intercept.Name = "Intercept";
             // 
             // Area
             // 
@@ -119,8 +119,8 @@ namespace LabviewDXFViewer
         private System.Windows.Forms.DataGridViewTextBoxColumn Position;
         private System.Windows.Forms.DataGridViewComboBoxColumn Orientation;
         private System.Windows.Forms.DataGridViewTextBoxColumn Result;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Intercept;
         private System.Windows.Forms.DataGridViewTextBoxColumn Capacitance;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Intercept;
         private System.Windows.Forms.DataGridViewTextBoxColumn Area;
     }
 }

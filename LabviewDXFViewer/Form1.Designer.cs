@@ -79,7 +79,7 @@
             this.microsites1.Canvas = null;
             this.microsites1.Location = new System.Drawing.Point(721, 32);
             this.microsites1.Name = "microsites1";
-            this.microsites1.Size = new System.Drawing.Size(367, 386);
+            this.microsites1.Size = new System.Drawing.Size(724, 386);
             this.microsites1.TabIndex = 2;
             // 
             // dxfCanvas1
@@ -89,14 +89,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dxfCanvas1.Location = new System.Drawing.Point(12, 32);
             this.dxfCanvas1.Name = "dxfCanvas1";
-            this.dxfCanvas1.Size = new System.Drawing.Size(703, 386);
+            this.dxfCanvas1.Size = new System.Drawing.Size(1060, 386);
             this.dxfCanvas1.TabIndex = 1;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1100, 477);
+            this.ClientSize = new System.Drawing.Size(1457, 477);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);

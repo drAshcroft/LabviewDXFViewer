@@ -12,6 +12,8 @@ namespace LabviewDXFViewer.DataTypes
         public string JunctionName { get; set; }
         public string Orientation { get; set; }
         public Point Position { get; set; }
+
+        public double Area { get; set; }
         public ProbeSite() { }
         public ProbeSite(string position)
         {

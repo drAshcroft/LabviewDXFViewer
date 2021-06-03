@@ -199,7 +199,7 @@ namespace LabviewDXFViewer
             GetFirstCorner(ProbeOrientation.Horizontal);
         }
 
-        public void AddResult(ProbeSite site, string result)
+        public void AddResult(ProbeSite site, double conductance, double capacitance, double intercept)
         {
             for (int i = dataGridView1.Rows.Count - 1; i >= 0; i--)
             {
@@ -207,7 +207,9 @@ namespace LabviewDXFViewer
                 {
                     if (dataGridView1.Rows[i].Cells[0].Value.ToString() == site.JunctionName)
                     {
-                        dataGridView1.Rows[i].Cells[3].Value = result;
+                        dataGridView1.Rows[i].Cells[3].Value = conductance;
+                        dataGridView1.Rows[i].Cells[4].Value = capacitance;
+                        dataGridView1.Rows[i].Cells[5].Value = intercept;
                         dataGridView1.Rows[i].Selected = true;
                     }
                 }
@@ -231,7 +233,7 @@ namespace LabviewDXFViewer
                 var hits = ExistingData.Where(x => Math.Abs(point.X - x.Position.X) < 10 && Math.Abs(point.Y - x.Position.Y) < 10).FirstOrDefault();
                 if (hits == null)
                 {
-                    var newPoint = new ProbeSite { JunctionName = "UNK"+ ExistingData.Count, Orientation = "Horizontal", Position = point };
+                    var newPoint = new ProbeSite { JunctionName = "UNK" + ExistingData.Count, Orientation = "Horizontal", Position = point };
                     ExistingData.Add(newPoint);
                     addData.Add(newPoint);
                 }
@@ -241,7 +243,7 @@ namespace LabviewDXFViewer
 
             foreach (var row in addData)
             {
-                dataGridView1.Rows.Add(row.JunctionName, row.Position.X + "," + row.Position.Y, row.Orientation,"");
+                dataGridView1.Rows.Add(row.JunctionName, row.Position.X + "," + row.Position.Y, row.Orientation, "", "", "", "0");
             }
 
             GetFirstCorner(ProbeOrientation.Horizontal);
@@ -259,6 +261,7 @@ namespace LabviewDXFViewer
                     {
                         JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
                         Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
+                        Area = double.Parse(dataGridView1.Rows[i].Cells[6].Value == null ? "0" : dataGridView1.Rows[i].Cells[6].Value.ToString())
                     });
                 }
             }
@@ -278,6 +281,7 @@ namespace LabviewDXFViewer
                     {
                         JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
                         Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
+                        Area = double.Parse(dataGridView1.Rows[i].Cells[6].Value == null ? "0" : dataGridView1.Rows[i].Cells[6].Value.ToString())
                     });
                 }
             }
