@@ -25,11 +25,15 @@ namespace LabviewDXFViewer
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-            pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            try
+            {
+                pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
 
-            if (Viewer != null)
-                Viewer.Draw(pictureBox1.Image);
-            pictureBox1.Invalidate();
+                if (Viewer != null)
+                    Viewer.Draw(pictureBox1.Image);
+                pictureBox1.Invalidate();
+            }
+            catch { }
         }
 
         public void SetCorner(int cornerNumber, Point Coords)

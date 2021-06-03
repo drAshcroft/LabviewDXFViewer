@@ -17,7 +17,8 @@ namespace LabviewDXFViewer
 {
     public partial class Microsites : UserControl
     {
-        public static string WebHost = "https://raxdatastore.azurewebsites.net/api/";
+        // public static string WebHost = "https://raxdatastore.azurewebsites.net/api/";
+        public static string WebHost = "http://localhost:7071/api/";
         public Microsites()
         {
             InitializeComponent();
@@ -38,17 +39,27 @@ namespace LabviewDXFViewer
             public string uploadedDate { get; set; }
         }
 
+        private readonly HttpClient _httpClient;
         public void SaveListSitesCloud(string waferName)
         {
 
+            var filename = Canvas.Filename;
             var saveData = new WaferInfo
             {
                 activeLayer = Canvas.SaveLayerActivationDelimited(),
                 probes = GetListData(),
-                waferName = waferName
+                waferName = waferName,
+
             };
 
-            var result = (WebHost + "WaferTestSiteLoad?code=dG3i8BEApZF3cS00grJdfbpClSsPfPJ9oH2lLa4FyLtcReGbrmyp0w==").PostJsonAsync(saveData).Result;
+
+            var resp = (WebHost + "WaferPlanLoad").PostMultipartAsync(mp => mp
+                    .AddString("title", waferName)
+                    .AddFile("file", filename)
+                 ).Result;
+
+
+            var result = (WebHost + "WaferTestSiteLoad?code=dG3i8BEApZF3cS00grJdfbpClSsPfPJ9oH2lLa4FyLtcReGbrmyp0w==&blob=" + Path.GetFileName(filename)).PostJsonAsync(saveData).Result;
 
         }
 
@@ -76,7 +87,7 @@ namespace LabviewDXFViewer
         }
         public string LoadListSitesLV(string waferName, string dxfFile, string waferTestInfos)
         {
-
+            ExistingData.Clear();
             var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\SPSProbes";
             if (Directory.Exists(dir) == false)
                 Directory.CreateDirectory(dir);
@@ -108,7 +119,7 @@ namespace LabviewDXFViewer
         }
         public void LoadListSitesCloud(string waferName)
         {
-
+            ExistingData.Clear();
             var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\SPSProbes";
             if (Directory.Exists(dir) == false)
                 Directory.CreateDirectory(dir);
@@ -169,6 +180,7 @@ namespace LabviewDXFViewer
         public DXFCanvas Canvas { get; set; }
         public void LoadListSites(string waferName)
         {
+            ExistingData.Clear();
             var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\SPSProbes";
             if (Directory.Exists(dir) == false)
                 Directory.CreateDirectory(dir);
@@ -261,7 +273,7 @@ namespace LabviewDXFViewer
                     {
                         JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
                         Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
-                        Area = double.Parse(dataGridView1.Rows[i].Cells[6].Value == null ? "0" : dataGridView1.Rows[i].Cells[6].Value.ToString())
+                        Area = double.Parse(dataGridView1.Rows[i].Cells[6].Value == null ? "0" : "0" + dataGridView1.Rows[i].Cells[6].Value.ToString())
                     });
                 }
             }
@@ -487,6 +499,16 @@ namespace LabviewDXFViewer
 
         }
 
+        private int _ClickedRow = -1;
+        public int ClickedRow
+        {
+            get
+            {
+                var t = _ClickedRow;
+                _ClickedRow = -1;
+                return t;
+            }
+        }
         private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             var i = e.RowIndex;
