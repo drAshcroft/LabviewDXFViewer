@@ -35,7 +35,7 @@
 			<Item Name="Abort Trigger Model.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Action-Status/Abort Trigger Model.vi"/>
 			<Item Name="Action-Status.mnu" Type="Document" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Action-Status/Action-Status.mnu"/>
 			<Item Name="Apply LAN Setting.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Action-Status/Apply LAN Setting.vi"/>
-			<Item Name="Clear Reading Buffer Data.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Action-Status/Clear Reading Buffer Data.vi"/>
+			<Item Name="Clear Reading Buffer Data.vi" Type="VI" URL="../Public/Action-Status/Clear Reading Buffer Data.vi"/>
 			<Item Name="Enable LAN Automatic Connection.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Action-Status/Enable LAN Automatic Connection.vi"/>
 			<Item Name="Enable Relative Measurement.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Action-Status/Enable Relative Measurement.vi"/>
 			<Item Name="Enable Source High Capacitance Mode.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Action-Status/Enable Source High Capacitance Mode.vi"/>
@@ -138,7 +138,7 @@
 		<Item Name="Data" Type="Folder">
 			<Item Name="Low Level" Type="Folder">
 				<Item Name="Low Level.mnu" Type="Document" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Low Level/Low Level.mnu"/>
-				<Item Name="Print Buffer Data.vi" Type="VI" URL="../Public/Data/Low Level/Print Buffer Data.vi"/>
+				<Item Name="Print Buffer Data.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Low Level/Print Buffer Data.vi"/>
 				<Item Name="Print Variable.vi" Type="VI" URL="../Public/Data/Low Level/Print Variable.vi"/>
 			</Item>
 			<Item Name="Data.mnu" Type="Document" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Data.mnu"/>

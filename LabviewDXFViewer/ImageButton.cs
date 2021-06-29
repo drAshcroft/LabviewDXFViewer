@@ -10,8 +10,7 @@ namespace LabviewDXFViewer
         {
             InitializeComponent();
         }
-
-
+        public event EventHandler Latched;
 
         public void SetToolTip(string toolTip)
         {
@@ -113,7 +112,9 @@ namespace LabviewDXFViewer
         private void bLeft_Click(object sender, EventArgs e)
         {
             Clicked = true;
-          
+            if (Latched != null)
+                Latched(sender, e);
+
         }
 
         private bool ClickedState = false;

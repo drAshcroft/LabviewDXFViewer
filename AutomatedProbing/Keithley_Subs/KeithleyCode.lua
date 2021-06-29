@@ -769,7 +769,7 @@ function _Sweep()
     --==========================================================================
     -- This function Configures the smu options such as nplc, function, range, etc.
     --==========================================================================
-    local ConfigureSmus = function()
+    local ConfigureSmus = function(rangei)
         -- set up Sweep (inner sweep) for sweep1
         sweep1.sense = sweep1.SENSE_LOCAL
         sweep1.source.delay = 0
@@ -790,7 +790,7 @@ function _Sweep()
         sweep1.source.rangev = 2
         sweep1.trigger.source.listv({#VoltList})
         sweep1.measure.autorangei = 0
-        sweep1.measure.rangei =#rangei 
+        sweep1.measure.rangei = rangei
         sweep1.measure.autorangev = sweep1.source.autorangev
         if (sweep1.measure.autorangev == 0) then
             sweep1.measure.rangev = sweep1.source.rangev
@@ -806,7 +806,53 @@ function _Sweep()
     
     CheckSettings()
     Reset()
-    ConfigureSmus()
+
+local rangei=1e-3
+smua.source.output = 1
+smua.source.limiti = rangei
+smua.source.levelv = .001
+delay(.1)
+local reading = smua.measure.i() *1000
+
+--print(string.format(",%e",reading))
+
+if (reading<rangei) then
+	rangei=rangei/100
+	smua.source.output = 1
+	smua.source.limiti = rangei
+	smua.source.levelv = .001
+	delay(.1)
+	reading = smua.measure.i() *1000
+--print(string.format(",%e",reading))
+	
+end
+
+if (reading<rangei) then
+	rangei=rangei/100
+	smua.source.output = 1
+	smua.source.limiti = rangei
+	smua.source.levelv = .001
+	delay(.1)
+	reading = smua.measure.i() *1000
+--print(string.format(",%e",reading))
+	
+end
+
+if (reading<rangei) then
+	rangei=rangei/1000
+	smua.source.output = 1
+	smua.source.limiti = rangei
+	smua.source.levelv = .001
+	delay(.1)
+	reading = smua.measure.i() *1000
+--print(string.format(",%e",reading))
+	
+end
+
+
+
+
+    ConfigureSmus(rangei)
     ConfigureTriggerLines()
     
     StoreReadingBufferIndexes()

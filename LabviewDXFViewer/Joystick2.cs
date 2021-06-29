@@ -17,11 +17,12 @@ namespace LabviewDXFViewer
             InitializeComponent();
         }
 
-      
+        public event EventHandler Latched;
 
         private void bUpMore_Click(object sender, EventArgs e)
         {
-            UpMore = true;
+            UpMore = true; if (Latched != null)
+                Latched(sender, e);
 
         }
         private bool UpMoreState = false;
@@ -48,6 +49,8 @@ namespace LabviewDXFViewer
         private void bZero_Click(object sender, EventArgs e)
         {
             ZeroMove = true;
+            if (Latched != null)
+                Latched(sender, e);
         }
 
         private bool ZeroState = false;
@@ -73,6 +76,8 @@ namespace LabviewDXFViewer
         private void bUp_Click(object sender, EventArgs e)
         {
             UpMove = true;
+            if (Latched != null)
+                Latched(sender, e);
         }
         private bool UpState = false;
         public bool UpMove
@@ -98,6 +103,8 @@ namespace LabviewDXFViewer
         private void bRightMore_Click(object sender, EventArgs e)
         {
             RightMore = true;
+            if (Latched != null)
+                Latched(sender, e);
         }
         private bool RightMoreState = false;
         public bool RightMore
@@ -123,6 +130,8 @@ namespace LabviewDXFViewer
         private void bRight_Click(object sender, EventArgs e)
         {
             RightMove = true;
+            if (Latched != null)
+                Latched(sender, e);
         }
         private bool RightState = false;
         public bool RightMove
@@ -147,6 +156,8 @@ namespace LabviewDXFViewer
         private void bDown_Click(object sender, EventArgs e)
         {
             DownMove = true;
+            if (Latched != null)
+                Latched(sender, e);
         }
         private bool DownState = false;
         public bool DownMove
@@ -172,6 +183,8 @@ namespace LabviewDXFViewer
         private void bDownMore_Click(object sender, EventArgs e)
         {
             DownMore = true;
+            if (Latched != null)
+                Latched(sender, e);
         }
         private bool DownMoreState = false;
         public bool DownMore
@@ -199,6 +212,8 @@ namespace LabviewDXFViewer
         private void bLeft_Click(object sender, EventArgs e)
         {
             LeftMove = true;
+            if (Latched != null)
+                Latched(sender, e);
         }
         private bool LeftState = false;
         public bool LeftMove
@@ -226,6 +241,8 @@ namespace LabviewDXFViewer
         private void bLeftMore_Click(object sender, EventArgs e)
         {
             LeftMore = true;
+            if (Latched != null)
+                Latched(sender, e);
         }
         private bool LeftMoreState = false;
         public bool LeftMore
@@ -253,6 +270,8 @@ namespace LabviewDXFViewer
         private void bHome_Click(object sender, EventArgs e)
         {
             HomeMove = true;
+            if (Latched != null)
+                Latched(sender, e);
         }
         private bool HomeState = false;
         public bool HomeMove
@@ -280,6 +299,8 @@ namespace LabviewDXFViewer
         private void bLoad_Click(object sender, EventArgs e)
         {
             LoadMove = true;
+            if (Latched != null)
+                Latched(sender, e);
         }
 
         private bool LoadState = false;

@@ -40,7 +40,25 @@ namespace LabviewDXFViewer
         }
 
         private readonly HttpClient _httpClient;
+
+        Random rnd = new Random();
         public void SaveListSitesCloud(string waferName)
+        {
+
+            var filename = Canvas.Filename;
+            var saveData = new WaferInfo
+            {
+                activeLayer = Canvas.SaveLayerActivationDelimited(),
+                probes = GetListData(),
+                waferName = waferName,
+
+            };
+
+
+            var result = (WebHost + $"DataUploadJson?code=dG3i8BEApZF3cS00grJdfbpClSsPfPJ9oH2lLa4FyLtcReGbrmyp0w==&Tags=W005|D2|JUNCTIONS|B1B2|IV|UNSHUNT&DataType=IV_SERIES").PostStringAsync("test").Result;
+
+        }
+        public void SaveListSitesCloudO(string waferName)
         {
 
             var filename = Canvas.Filename;
@@ -211,7 +229,125 @@ namespace LabviewDXFViewer
             GetFirstCorner(ProbeOrientation.Horizontal);
         }
 
-        public void AddResult(ProbeSite site, double conductance, double capacitance, double intercept)
+        public  string ToSignificantDigits(
+     double value, int significant_digits)
+        {
+            // Use G format to get significant digits.
+            // Then convert to double and use F format.
+            string format1 = "{0:G" + significant_digits.ToString() + "}";
+            string result = Convert.ToDouble(
+                String.Format(format1, value)).ToString("F99");
+
+            // Rmove trailing 0s.
+            result = result.TrimEnd('0');
+
+            // Rmove the decimal point and leading 0s,
+            // leaving just the digits.
+            string test = result.Replace(".", "").TrimStart('0');
+
+            // See if we have enough significant digits.
+            if (significant_digits > test.Length)
+            {
+                // Add trailing 0s.
+                result += new string('0', significant_digits - test.Length);
+            }
+            else
+            {
+                // See if we should remove the trailing decimal point.
+                if ((significant_digits < test.Length) &&
+                    result.EndsWith("."))
+                    result = result.Substring(0, result.Length - 1);
+            }
+
+            return result;
+        }
+
+        private  string ToEngineeringNotation( double d)
+        {
+            double exponent = Math.Log10(Math.Abs(d));
+            if (Math.Abs(d) >= 1)
+            {
+                switch ((int)Math.Floor(exponent))
+                {
+                    case 0:
+                    case 1:
+                    case 2:
+                        return ToSignificantDigits( d, 3);
+                    case 3:
+                    case 4:
+                    case 5:
+                        return ToSignificantDigits(d / 1e3, 3) + "k";
+                    case 6:
+                    case 7:
+                    case 8:
+                        return ToSignificantDigits(d / 1e6, 3) + "M";
+                    case 9:
+                    case 10:
+                    case 11:
+                        return ToSignificantDigits(d / 1e9, 3) + "G";
+                    case 12:
+                    case 13:
+                    case 14:
+                        return ToSignificantDigits(d / 1e12, 3) + "T";
+                    case 15:
+                    case 16:
+                    case 17:
+                        return ToSignificantDigits(d / 1e15, 3) + "P";
+                    case 18:
+                    case 19:
+                    case 20:
+                        return ToSignificantDigits(d / 1e18, 3) + "E";
+                    case 21:
+                    case 22:
+                    case 23:
+                        return ToSignificantDigits(d / 1e21, 3) + "Z";
+                    default:
+                        return ToSignificantDigits(d / 1e24, 3) + "Y";
+                }
+            }
+            else if (Math.Abs(d) > 0)
+            {
+                switch ((int)Math.Floor(exponent))
+                {
+                    case -1:
+                    case -2:
+                    case -3:
+                        return ToSignificantDigits(d * 1e3, 3) + "m";
+                    case -4:
+                    case -5:
+                    case -6:
+                        return ToSignificantDigits(d * 1e6, 3) + "μ";
+                    case -7:
+                    case -8:
+                    case -9:
+                        return ToSignificantDigits(d * 1e9, 3) + "n";
+                    case -10:
+                    case -11:
+                    case -12:
+                        return ToSignificantDigits(d * 1e12, 3) + "p";
+                    case -13:
+                    case -14:
+                    case -15:
+                        return ToSignificantDigits(d * 1e15, 3) + "f";
+                    case -16:
+                    case -17:
+                    case -18:
+                        return ToSignificantDigits(d * 1e15, 3) + "a";
+                    case -19:
+                    case -20:
+                    case -21:
+                        return ToSignificantDigits(d * 1e15, 3) + "z";
+                    default:
+                        return ToSignificantDigits(d * 1e15, 3) + "y";
+                }
+            }
+            else
+            {
+                return "0";
+            }
+        }
+
+        public void AddResult(ProbeSite site, double conductance, double capacitance, double intercept, string conductUnit, string capUnit, string interceptUnit)
         {
             for (int i = dataGridView1.Rows.Count - 1; i >= 0; i--)
             {
@@ -219,9 +355,9 @@ namespace LabviewDXFViewer
                 {
                     if (dataGridView1.Rows[i].Cells[0].Value.ToString() == site.JunctionName)
                     {
-                        dataGridView1.Rows[i].Cells[3].Value = conductance;
-                        dataGridView1.Rows[i].Cells[4].Value = capacitance;
-                        dataGridView1.Rows[i].Cells[5].Value = intercept;
+                        dataGridView1.Rows[i].Cells[3].Value = ToEngineeringNotation( conductance) + conductUnit;
+                        dataGridView1.Rows[i].Cells[4].Value = ToEngineeringNotation(capacitance) + capUnit;
+                        dataGridView1.Rows[i].Cells[5].Value = ToEngineeringNotation(intercept) + interceptUnit;
                         dataGridView1.Rows[i].Selected = true;
                     }
                 }
@@ -435,8 +571,6 @@ namespace LabviewDXFViewer
             return new int[] { (int)sites[maxI].Position.X, (int)sites[maxI].Position.Y };
         }
 
-
-
         private int MouseOverRow;
         private void dataGridView1_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -509,6 +643,7 @@ namespace LabviewDXFViewer
                 return t;
             }
         }
+
         private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             var i = e.RowIndex;
