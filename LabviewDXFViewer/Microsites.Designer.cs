@@ -38,7 +38,6 @@ namespace LabviewDXFViewer
             this.Intercept = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TopWidth = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BottomWidth = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -53,8 +52,7 @@ namespace LabviewDXFViewer
             this.Capacitance,
             this.Intercept,
             this.TopWidth,
-            this.BottomWidth,
-            this.Area});
+            this.BottomWidth});
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Name = "dataGridView1";
@@ -96,7 +94,7 @@ namespace LabviewDXFViewer
             // 
             // Intercept
             // 
-            this.Intercept.HeaderText = "Intercept";
+            this.Intercept.HeaderText = "Oxide";
             this.Intercept.Name = "Intercept";
             // 
             // TopWidth
@@ -108,11 +106,6 @@ namespace LabviewDXFViewer
             // 
             this.BottomWidth.HeaderText = "Bottom Width (μm)";
             this.BottomWidth.Name = "BottomWidth";
-            // 
-            // Area
-            // 
-            this.Area.HeaderText = "Area  (μm*μm)";
-            this.Area.Name = "Area";
             // 
             // Microsites
             // 
@@ -137,6 +130,5 @@ namespace LabviewDXFViewer
         private System.Windows.Forms.DataGridViewTextBoxColumn Intercept;
         private System.Windows.Forms.DataGridViewTextBoxColumn TopWidth;
         private System.Windows.Forms.DataGridViewTextBoxColumn BottomWidth;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Area;
     }
 }
