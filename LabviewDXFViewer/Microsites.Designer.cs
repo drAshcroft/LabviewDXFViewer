@@ -36,6 +36,8 @@ namespace LabviewDXFViewer
             this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Capacitance = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Intercept = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TopWidth = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BottomWidth = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -50,11 +52,13 @@ namespace LabviewDXFViewer
             this.Result,
             this.Capacitance,
             this.Intercept,
+            this.TopWidth,
+            this.BottomWidth,
             this.Area});
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(436, 511);
+            this.dataGridView1.Size = new System.Drawing.Size(901, 511);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
@@ -95,9 +99,19 @@ namespace LabviewDXFViewer
             this.Intercept.HeaderText = "Intercept";
             this.Intercept.Name = "Intercept";
             // 
+            // TopWidth
+            // 
+            this.TopWidth.HeaderText = "Top Width (μm)";
+            this.TopWidth.Name = "TopWidth";
+            // 
+            // BottomWidth
+            // 
+            this.BottomWidth.HeaderText = "Bottom Width (μm)";
+            this.BottomWidth.Name = "BottomWidth";
+            // 
             // Area
             // 
-            this.Area.HeaderText = "Area";
+            this.Area.HeaderText = "Area  (μm*μm)";
             this.Area.Name = "Area";
             // 
             // Microsites
@@ -106,7 +120,7 @@ namespace LabviewDXFViewer
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.dataGridView1);
             this.Name = "Microsites";
-            this.Size = new System.Drawing.Size(436, 511);
+            this.Size = new System.Drawing.Size(901, 511);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
@@ -121,6 +135,8 @@ namespace LabviewDXFViewer
         private System.Windows.Forms.DataGridViewTextBoxColumn Result;
         private System.Windows.Forms.DataGridViewTextBoxColumn Capacitance;
         private System.Windows.Forms.DataGridViewTextBoxColumn Intercept;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TopWidth;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BottomWidth;
         private System.Windows.Forms.DataGridViewTextBoxColumn Area;
     }
 }

@@ -65,13 +65,31 @@ namespace LabviewDXFViewer
 
         Accord.Imaging.Filters.Mirror filter = new Accord.Imaging.Filters.Mirror(true, true);
 
+        bool _SaveFrame = false;
+        string _FrameFile = "";
         private void VideoSource_NewFrame(object sender, Accord.Video.NewFrameEventArgs eventArgs)
         {
             eventArgs.Frame= filter.Apply(eventArgs.Frame);
+
+            if (_SaveFrame)
+            {
+                try
+                {
+                    _SaveFrame = false;
+                    eventArgs.Frame.Save(_FrameFile);
+                }
+                catch { }
+            }
         }
         private void VideoSourcePlayer_DoubleClick(object sender, System.EventArgs e)
         {
             throw new System.NotImplementedException();
+            
+        }
+        public void SaveFrame(string frameName)
+        {
+            _FrameFile = frameName;
+            _SaveFrame = true;
         }
 
         public string[] GetCameras()

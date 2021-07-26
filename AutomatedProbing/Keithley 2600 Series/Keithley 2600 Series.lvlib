@@ -39,7 +39,7 @@
 			<Item Name="Enable LAN Automatic Connection.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Action-Status/Enable LAN Automatic Connection.vi"/>
 			<Item Name="Enable Relative Measurement.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Action-Status/Enable Relative Measurement.vi"/>
 			<Item Name="Enable Source High Capacitance Mode.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Action-Status/Enable Source High Capacitance Mode.vi"/>
-			<Item Name="Enable Source Output.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Action-Status/Enable Source Output.vi"/>
+			<Item Name="Enable Source Output.vi" Type="VI" URL="../Public/Action-Status/Enable Source Output.vi"/>
 			<Item Name="Initiate Pulse Test.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Action-Status/Initiate Pulse Test.vi"/>
 			<Item Name="Manage Data Queue.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Action-Status/Manage Data Queue.vi"/>
 			<Item Name="Pulser Protect Tripped Status.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Action-Status/Pulser Protect Tripped Status.vi"/>
@@ -79,7 +79,7 @@
 				<Item Name="Configure Measurement Characteristics.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Measurement/Configure Measurement Characteristics.vi"/>
 				<Item Name="Configure Measurement Delay.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Measurement/Configure Measurement Delay.vi"/>
 				<Item Name="Configure Measurement Filter.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Measurement/Configure Measurement Filter.vi"/>
-				<Item Name="Configure Measurement Range.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Measurement/Configure Measurement Range.vi"/>
+				<Item Name="Configure Measurement Range.vi" Type="VI" URL="../Public/Configure/Measurement/Configure Measurement Range.vi"/>
 				<Item Name="Configure Relative Measurement Level.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Measurement/Configure Relative Measurement Level.vi"/>
 				<Item Name="Measurement.mnu" Type="Document" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Measurement/Measurement.mnu"/>
 			</Item>
@@ -94,13 +94,13 @@
 			</Item>
 			<Item Name="Source" Type="Folder">
 				<Item Name="Configure SMU Off-State.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Source/Configure SMU Off-State.vi"/>
-				<Item Name="Configure Source (Level).vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Source/Configure Source (Level).vi"/>
-				<Item Name="Configure Source (Limit).vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Source/Configure Source (Limit).vi"/>
-				<Item Name="Configure Source (Range).vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Source/Configure Source (Range).vi"/>
+				<Item Name="Configure Source (Level).vi" Type="VI" URL="../Public/Configure/Source/Configure Source (Level).vi"/>
+				<Item Name="Configure Source (Limit).vi" Type="VI" URL="../Public/Configure/Source/Configure Source (Limit).vi"/>
+				<Item Name="Configure Source (Range).vi" Type="VI" URL="../Public/Configure/Source/Configure Source (Range).vi"/>
 				<Item Name="Configure Source Delay.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Source/Configure Source Delay.vi"/>
-				<Item Name="Configure Source Function.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Source/Configure Source Function.vi"/>
+				<Item Name="Configure Source Function.vi" Type="VI" URL="../Public/Configure/Source/Configure Source Function.vi"/>
 				<Item Name="Configure Source Output Characteristics.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Source/Configure Source Output Characteristics.vi"/>
-				<Item Name="Configure Source.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Source/Configure Source.vi"/>
+				<Item Name="Configure Source.vi" Type="VI" URL="../Public/Configure/Source/Configure Source.vi"/>
 				<Item Name="Source.mnu" Type="Document" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Source/Source.mnu"/>
 			</Item>
 			<Item Name="Trigger" Type="Folder">
@@ -127,7 +127,7 @@
 			<Item Name="Configure GPIB Address.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Configure GPIB Address.vi"/>
 			<Item Name="Configure Local Node Characteristics.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Configure Local Node Characteristics.vi"/>
 			<Item Name="Configure Power On Setting.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Configure Power On Setting.vi"/>
-			<Item Name="Configure Sense Connection.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Configure Sense Connection.vi"/>
+			<Item Name="Configure Sense Connection.vi" Type="VI" URL="../Public/Configure/Configure Sense Connection.vi"/>
 			<Item Name="Configure Serial Port.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Configure Serial Port.vi"/>
 			<Item Name="Configure System Time.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Configure System Time.vi"/>
 			<Item Name="Configure TSP Link Instrument Node.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Configure/Configure TSP Link Instrument Node.vi"/>
@@ -138,7 +138,7 @@
 		<Item Name="Data" Type="Folder">
 			<Item Name="Low Level" Type="Folder">
 				<Item Name="Low Level.mnu" Type="Document" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Low Level/Low Level.mnu"/>
-				<Item Name="Print Buffer Data.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Low Level/Print Buffer Data.vi"/>
+				<Item Name="Print Buffer Data.vi" Type="VI" URL="../Public/Data/Low Level/Print Buffer Data.vi"/>
 				<Item Name="Print Variable.vi" Type="VI" URL="../Public/Data/Low Level/Print Variable.vi"/>
 			</Item>
 			<Item Name="Data.mnu" Type="Document" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Data.mnu"/>
@@ -160,12 +160,12 @@
 			<Item Name="Read Current.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Read Current.vi"/>
 			<Item Name="Read Digital IO Data.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Read Digital IO Data.vi"/>
 			<Item Name="Read Elapsed Time.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Read Elapsed Time.vi"/>
-			<Item Name="Read Measurement (Current and Voltage).vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Read Measurement (Current and Voltage).vi"/>
-			<Item Name="Read Measurement (Current).vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Read Measurement (Current).vi"/>
-			<Item Name="Read Measurement (Power).vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Read Measurement (Power).vi"/>
-			<Item Name="Read Measurement (Resistance).vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Read Measurement (Resistance).vi"/>
-			<Item Name="Read Measurement (Voltage).vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Read Measurement (Voltage).vi"/>
-			<Item Name="Read Measurement.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Read Measurement.vi"/>
+			<Item Name="Read Measurement (Current and Voltage).vi" Type="VI" URL="../Public/Data/Read Measurement (Current and Voltage).vi"/>
+			<Item Name="Read Measurement (Current).vi" Type="VI" URL="../Public/Data/Read Measurement (Current).vi"/>
+			<Item Name="Read Measurement (Power).vi" Type="VI" URL="../Public/Data/Read Measurement (Power).vi"/>
+			<Item Name="Read Measurement (Resistance).vi" Type="VI" URL="../Public/Data/Read Measurement (Resistance).vi"/>
+			<Item Name="Read Measurement (Voltage).vi" Type="VI" URL="../Public/Data/Read Measurement (Voltage).vi"/>
+			<Item Name="Read Measurement.vi" Type="VI" URL="../Public/Data/Read Measurement.vi"/>
 			<Item Name="Read Power Measurement and Step Source.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Read Power Measurement and Step Source.vi"/>
 			<Item Name="Read Pulsed Current.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Read Pulsed Current.vi"/>
 			<Item Name="Read Pulsed Voltage.vi" Type="VI" URL="/&lt;instrlib&gt;/Keithley 2600 Series/Public/Data/Read Pulsed Voltage.vi"/>

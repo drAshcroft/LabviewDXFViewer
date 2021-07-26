@@ -14,6 +14,8 @@ namespace LabviewDXFViewer.DataTypes
         public Point Position { get; set; }
 
         public double Area { get; set; }
+        public double TopWidth { get; set; }
+        public double BottomWidth { get; set; }
         public ProbeSite() { }
         public ProbeSite(string position)
         {
