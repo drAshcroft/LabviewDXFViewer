@@ -91,11 +91,34 @@ namespace LabviewDXFViewer
             _FrameFile = frameName;
             _SaveFrame = true;
         }
+        public void ShowFrame (string frameName)
+        {
+            pictureBox1.Image = Bitmap.FromFile(frameName);
+            videoSourcePlayer.Stop();
+            button1.Visible = true;
+            pictureBox1.Visible = true;
+            videoSourcePlayer.Visible = false;
+        }
 
         public string[] GetCameras()
         {
             VideoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             return VideoDevices.Select(x => x.Name).ToArray();
+        }
+
+
+        public void StartVideo()
+        {
+            videoSourcePlayer.Visible = true;
+            pictureBox1.Image = new Bitmap(10, 10);
+            pictureBox1.Visible = false;
+            button1.Visible = false;
+            videoSourcePlayer.Start();
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+           
+
         }
     }
 }

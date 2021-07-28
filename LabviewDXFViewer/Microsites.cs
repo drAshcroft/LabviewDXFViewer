@@ -12,12 +12,13 @@ using Flurl.Http;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
+using Accord.Imaging;
 
 namespace LabviewDXFViewer
 {
     public partial class Microsites : UserControl
     {
-         public static string WebHost = "https://raxdatastore2.azurewebsites.net/api/";
+        public static string WebHost = "https://raxdatastore2.azurewebsites.net/api/";
         //public static string WebHost = "http://localhost:7073/api/";
         public Microsites()
         {
@@ -188,14 +189,11 @@ namespace LabviewDXFViewer
             outText += Canvas.SaveLayerActivation() + "\n";
 
             outText += "Junction Name, Orientation, X(um), Y(um)\n";
-            foreach (var line in GetListData(ProbeOrientation.Horizontal))
+            foreach (var line in GetListData())
             {
-                outText += line.JunctionName + "," + line.Orientation.ToString() + "," + line.Position.X + "," + line.Position.Y + "\n";
+                outText += line.JunctionName + "," + line.Function.ToString() + "," + line.Position.X + "," + line.Position.Y + "\n";
             }
-            foreach (var line in GetListData(ProbeOrientation.Vertical))
-            {
-                outText += line.JunctionName + "," + line.Orientation.ToString() + "," + line.Position.X + "," + line.Position.Y + "\n";
-            }
+           
             File.WriteAllText(filename, outText);
         }
 
@@ -215,7 +213,7 @@ namespace LabviewDXFViewer
             for (int lineI = 3; lineI < inText.Length; lineI++)
             {
                 var parts = inText[lineI].Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                var newPoint = new ProbeSite { JunctionName = parts[0], Orientation = parts[1], Position = new Point(int.Parse(parts[2]), int.Parse(parts[3])) };
+                var newPoint = new ProbeSite { JunctionName = parts[0], Function = parts[1], Position = new Point(int.Parse(parts[2]), int.Parse(parts[3])) };
                 ExistingData.Add(newPoint);
                 addData.Add(newPoint);
             }
@@ -225,16 +223,16 @@ namespace LabviewDXFViewer
             }
         }
 
-        public void AddListSite(string junctionName, ProbeOrientation orientation, Point location)
+        public void AddListSite(string junctionName, ProbeOrientation orientation, ProbeFunction function,  Point location)
         {
-            var newPoint = new ProbeSite { JunctionName = junctionName, Orientation = orientation.ToString(), Position = location };
+
+            var newPoint = new ProbeSite { JunctionName = junctionName, Orientation = orientation.ToString(), Function=function.ToDescription(), Position = location };
             ExistingData.Add(newPoint);
-            dataGridView1.Rows.Add(newPoint.JunctionName, newPoint.Position.X + "," + newPoint.Position.Y, newPoint.Orientation, 0,0,0,newPoint.TopWidth, newPoint.BottomWidth, newPoint.Area);
-            GetFirstCorner(ProbeOrientation.Horizontal);
+            dataGridView1.Rows.Add(newPoint.JunctionName, newPoint.Position.X + "," + newPoint.Position.Y, newPoint.Function, 0, 0, 0, newPoint.TopWidth, newPoint.BottomWidth, newPoint.Area);
+            GetFirstCorner();
         }
 
-        public string ToSignificantDigits(
-     double value, int significant_digits)
+        public string ToSignificantDigits(     double value, int significant_digits)
         {
             // Use G format to get significant digits.
             // Then convert to double and use F format.
@@ -385,7 +383,7 @@ namespace LabviewDXFViewer
                 var hits = ExistingData.Where(x => Math.Abs(point.X - x.Position.X) < 10 && Math.Abs(point.Y - x.Position.Y) < 10).FirstOrDefault();
                 if (hits == null)
                 {
-                    var newPoint = new ProbeSite { JunctionName = "UNK" + ExistingData.Count, Orientation = "Horizontal", Position = point };
+                    var newPoint = new ProbeSite { JunctionName = "UNK" + ExistingData.Count, Orientation = "Horizontal", Function="IVC", Position = point };
                     ExistingData.Add(newPoint);
                     addData.Add(newPoint);
                 }
@@ -395,10 +393,10 @@ namespace LabviewDXFViewer
 
             foreach (var row in addData)
             {
-                dataGridView1.Rows.Add(row.JunctionName, row.Position.X + "," + row.Position.Y, row.Orientation, 0, 0,0, row.TopWidth, row.BottomWidth);
+                dataGridView1.Rows.Add(row.JunctionName, row.Position.X + "," + row.Position.Y, row.Function, 0, 0, 0, row.TopWidth, row.BottomWidth);
             }
 
-            GetFirstCorner(ProbeOrientation.Horizontal);
+            GetFirstCorner();
         }
 
         public ProbeSite[] GetListData()
@@ -414,7 +412,7 @@ namespace LabviewDXFViewer
                     sites.Add(new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
                     {
                         JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
-                        Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
+                        Function = (string)dataGridView1.Rows[i].Cells[2].Value,
                         Area = w * h,
                         BottomWidth = w,
                         TopWidth = h
@@ -425,52 +423,52 @@ namespace LabviewDXFViewer
             return sites.OrderBy(x => x.Position.Y * 10000 + x.Position.X / 100).ToArray();
         }
 
-        public ProbeSite[] GetListData(ProbeOrientation Orientation)
+        //public ProbeSite[] GetListData(ProbeOrientation Orientation)
+        //{
+        //    var sOrientation = Orientation.ToString().ToLower();
+        //    var sites = new List<ProbeSite>();
+        //    for (int i = 0; i < dataGridView1.Rows.Count; i++)
+        //    {
+        //        if (dataGridView1.Rows[i].Cells[2].Value != null )
+        //        {
+        //            double w = 0;
+        //            if (dataGridView1.Rows[i].Cells[6].Value.GetType() == typeof(string))
+        //                w = double.Parse(dataGridView1.Rows[i].Cells[6].Value == null ? "0" : "0" + dataGridView1.Rows[i].Cells[6].Value.ToString());
+        //            else
+        //                w = (double)dataGridView1.Rows[i].Cells[6].Value;
+
+        //            double h = 0;
+        //            if (dataGridView1.Rows[i].Cells[7].Value.GetType() == typeof(string))
+        //                h = double.Parse(dataGridView1.Rows[i].Cells[7].Value == null ? "0" : "0" + dataGridView1.Rows[i].Cells[6].Value.ToString());
+        //            else
+        //                h = (double)dataGridView1.Rows[i].Cells[7].Value;
+        //            sites.Add(new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
+        //            {
+        //                JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
+        //                Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
+        //                Area = w * h,
+        //                BottomWidth = w,
+        //                TopWidth = h
+        //            });
+        //        }
+        //    }
+
+        //    return sites.OrderBy(x => x.Position.Y * 10000 + x.Position.X / 100).ToArray();
+        //}
+
+        public int[] GetFirstCorner()
         {
-            var sOrientation = Orientation.ToString().ToLower();
+            
             var sites = new List<ProbeSite>();
+
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
-                if (dataGridView1.Rows[i].Cells[2].Value != null && dataGridView1.Rows[i].Cells[2].Value.ToString().ToLower() == sOrientation)
+                if (dataGridView1.Rows[i].Cells[2].Value != null )
                 {
-                    double w = 0;
-                    if (dataGridView1.Rows[i].Cells[6].Value.GetType() == typeof(string))
-                        w = double.Parse(dataGridView1.Rows[i].Cells[6].Value == null ? "0" : "0" + dataGridView1.Rows[i].Cells[6].Value.ToString());
-                    else
-                        w = (double)dataGridView1.Rows[i].Cells[6].Value;
-
-                    double h = 0;
-                    if (dataGridView1.Rows[i].Cells[7].Value.GetType() == typeof(string))
-                        h =double.Parse(dataGridView1.Rows[i].Cells[7].Value == null ? "0" : "0" + dataGridView1.Rows[i].Cells[6].Value.ToString());
-                    else
-                        h = (double)dataGridView1.Rows[i].Cells[7].Value;
                     sites.Add(new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
                     {
                         JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
-                        Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
-                        Area = w * h,
-                        BottomWidth = w,
-                        TopWidth = h
-                    });
-                }
-            }
-
-            return sites.OrderBy(x => x.Position.Y * 10000 + x.Position.X / 100).ToArray();
-        }
-
-        public int[] GetFirstCorner(ProbeOrientation Orientation)
-        {
-            var sOrientation = Orientation.ToString().ToLower();
-            var sites = new List<ProbeSite>();
-
-            for (int i = 0; i < dataGridView1.Rows.Count; i++)
-            {
-                if (dataGridView1.Rows[i].Cells[2].Value != null && dataGridView1.Rows[i].Cells[2].Value.ToString().ToLower() == sOrientation)
-                {
-                    sites.Add(new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
-                    {
-                        JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
-                        Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
+                        Function = (string)dataGridView1.Rows[i].Cells[2].Value,
                     });
                 }
             }
@@ -503,19 +501,19 @@ namespace LabviewDXFViewer
             return new int[] { (int)sites[maxI].Position.X, (int)sites[maxI].Position.Y };
         }
 
-        public int[] GetSecondCorner(ProbeOrientation Orientation)
+        public int[] GetSecondCorner()
         {
-            var sOrientation = Orientation.ToString().ToLower();
+          
             var sites = new List<ProbeSite>();
 
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
-                if (dataGridView1.Rows[i].Cells[2].Value != null && dataGridView1.Rows[i].Cells[2].Value.ToString().ToLower() == sOrientation)
+                if (dataGridView1.Rows[i].Cells[2].Value != null )
                 {
                     sites.Add(new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
                     {
                         JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
-                        Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
+                        Function = (string)dataGridView1.Rows[i].Cells[2].Value,
                     });
                 }
             }
@@ -547,19 +545,19 @@ namespace LabviewDXFViewer
             return new int[] { (int)sites[maxI].Position.X, (int)sites[maxI].Position.Y };
         }
 
-        public int[] GetThirdCorner(ProbeOrientation Orientation)
+        public int[] GetThirdCorner()
         {
             var sOrientation = Orientation.ToString().ToLower();
             var sites = new List<ProbeSite>();
 
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
-                if (dataGridView1.Rows[i].Cells[2].Value != null && dataGridView1.Rows[i].Cells[2].Value.ToString().ToLower() == sOrientation)
+                if (dataGridView1.Rows[i].Cells[2].Value != null )
                 {
                     sites.Add(new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
                     {
                         JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
-                        Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
+                        Function = (string)dataGridView1.Rows[i].Cells[2].Value,
                     });
                 }
             }
@@ -642,13 +640,13 @@ namespace LabviewDXFViewer
                     var ps = new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
                     {
                         JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
-                        Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
+                        Function = (string)dataGridView1.Rows[i].Cells[2].Value,
                         TopWidth = w,
                         BottomWidth = h,
-                        Area=w*h
+                        Area = w * h
                     };
                     addData.Add(ps);
-                   // dataGridView1.Rows[i].Cells[8].Value = ps.TopWidth * ps.BottomWidth;
+                    // dataGridView1.Rows[i].Cells[8].Value = ps.TopWidth * ps.BottomWidth;
                 }
             }
 
@@ -662,7 +660,7 @@ namespace LabviewDXFViewer
                 else
                 {
                     hits.JunctionName = point.JunctionName;
-                    hits.Orientation = point.Orientation;
+                    hits.Function = point.Function;
                     hits.BottomWidth = point.BottomWidth;
                     hits.TopWidth = point.TopWidth;
                     hits.Area = point.Area;
@@ -697,17 +695,54 @@ namespace LabviewDXFViewer
                 var selected = new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
                 {
                     JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
-                    Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
+                    Function = (string)dataGridView1.Rows[i].Cells[2].Value,
                 };
 
                 Canvas.SetMarker(selected.Position);
             }
+
+           
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+       
+
+
+        public double[,] HomographyProjection(int[,] alignPoints, int[,] recordedPoints, int[,] padPoints)
         {
-            _ClickedRow = e.RowIndex;
-            RowClicked?.Invoke(sender, EventArgs.Empty);
+            Accord.IntPoint[] correlationPoints1 = new Accord.IntPoint[alignPoints.Length];
+            Accord.IntPoint[] correlationPoints2 = new Accord.IntPoint[recordedPoints.Length];
+            for (int i=0;i<alignPoints.GetLength(0);i++)
+            {
+                correlationPoints1[i] = new Accord.IntPoint(alignPoints[i,0], alignPoints[i,1]);
+                correlationPoints2[i] = new Accord.IntPoint(recordedPoints[i,0], recordedPoints[i,1]);
+            }
+            RansacHomographyEstimator ransac = new RansacHomographyEstimator(0.001, 0.99);
+           var  homography = ransac.Estimate(correlationPoints1, correlationPoints2);
+
+            PointF[] testPoints = new PointF[padPoints.GetLength(0)];
+            for (int i = 0; i < padPoints.GetLength(0); i++)
+            {
+                testPoints[i] = new PointF(padPoints[i, 0], padPoints[i, 1]);
+            }
+
+           var transformed= homography.TransformPoints(testPoints);
+
+             double[,] results= new double[padPoints.GetLength(0), 2];
+            for (int i = 0; i < padPoints.GetLength(0); i++)
+            {
+                results[i, 0] = transformed[i].X;
+                results[i, 1] = transformed[i].Y;
+            }
+            return results;
+        }
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex != 2)
+            {
+                _ClickedRow = e.RowIndex;
+                RowClicked?.Invoke(sender, EventArgs.Empty);
+            }
         }
     }
 }

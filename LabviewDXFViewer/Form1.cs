@@ -68,6 +68,19 @@ namespace LabviewDXFViewer
         public static string pass="";
         private void Form1_Load(object sender, EventArgs e)
         {
+            var sites=
+            microsites1.HomographyProjection(
+                new int[3, 2] { { -5625, -7000 }, { 4875, -6999 }, { -5624, 7000 } },
+                new int[3, 2] { { 39769, 34322 }, { 33164, 34321 }, { 39767, 25516 } },
+                new int[3,2] { {-5625,-7000 },{4875,-6999 },{-5624,7000 } });
+
+
+            sites =
+            microsites1.HomographyProjection(
+                new int[2, 2] { { -5625, -7000 }, { 4875, -6999 } },
+                new int[2, 2] { { 39769, 34322 }, { 33164, 34321 } },
+                new int[3, 2] { { -5625, -7000 }, { 4875, -6999 }, { -5624, 7000 } });
+
             try
             {
                 pass = File.ReadAllText(".\\settings.txt");
