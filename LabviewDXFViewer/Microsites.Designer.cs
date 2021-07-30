@@ -80,10 +80,13 @@ namespace LabviewDXFViewer
             this.Orientation.Items.AddRange(new object[] {
             "IV",
             "IVC",
+            "Transconductance",
             "Breakdown",
             "Joule",
             "dC/dV",
-            "C/F"});
+            "C/F",
+            "Leakage",
+            "Leakage Threshold"});
             this.Orientation.Name = "Orientation";
             // 
             // Result

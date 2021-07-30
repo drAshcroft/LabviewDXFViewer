@@ -1121,7 +1121,7 @@ _Finalize()
 
 
 
-function AC_Waveform_Sweep(Vrms,VLin, numCycles, frequency, limitI,skips,center)
+function AC_Waveform_Sweep(Vrms,VLin, numCycles, frequency, limitI,skips,center,display)
 	reset()
 	local COMPLETE = "{COMPLETE}"
 	-- Generate the source values
@@ -1143,7 +1143,7 @@ function AC_Waveform_Sweep(Vrms,VLin, numCycles, frequency, limitI,skips,center)
 	smua.source.settling		= smua.SETTLE_FAST_POLARITY
 	smua.source.autorangev		= smua.AUTORANGE_OFF
 	smua.source.autorangei		= smua.AUTORANGE_OFF
-	smua.source.rangev			= 2 * Vpp + VLin
+    smua.source.rangev			= math.abs( Vpp+ 1.1*Vpp*center) +math.abs( VLin)
 	smua.source.delay			= 0
 	smua.source.limiti			= 1e-3
 
@@ -1249,14 +1249,22 @@ function AC_Waveform_Sweep(Vrms,VLin, numCycles, frequency, limitI,skips,center)
    
    pointsPerCycle=math.floor(pointsPerCycle)
    omega=frequency*2*math.pi
-   print(frequency, VLin, Vpp, phaseC/Vpp* math.sqrt(omega) *1565856180.88521 -57.2098793899397 , rms/Vrms, phaseC/Vpp, phaseS/Vpp,rms,2*math.pi* phase/cc)
+
+   if (display==1) then
+       for i=1,table.getn(singleWave) do
+         print(frequency, VLin, Vpp, phaseC/Vpp* math.sqrt(omega) *1565856180.88521 -57.2098793899397 , smua.nvbuffer2[i], phaseC/Vpp, phaseS/Vpp,singleWave[i],2*math.pi* phase/cc)
+       end
+   else 
+        print(frequency, VLin, Vpp, phaseC/Vpp* math.sqrt(omega) *1565856180.88521 -57.2098793899397 , rms/Vrms, phaseC/Vpp, phaseS/Vpp,rms,2*math.pi* phase/cc)
+   end
+   
   
 end
 
 
 
 
-function Square_Waveform_Sweep(Vrms, numCycles, frequency, limitI)
+function Square_Waveform_Sweep(Vrms, numCycles, frequency, limitI,display)
     reset()
     local COMPLETE = "{COMPLETE}"
     -- Generate the source values
@@ -1378,8 +1386,14 @@ function Square_Waveform_Sweep(Vrms, numCycles, frequency, limitI)
             break
         end
     end
-    
-    print(frequency, 0, Vpp, timeEnd/4031000 , maxI/Vpp, timeEnd,0,maxI,timeEnd)
+
+    if (display==1) then
+        for i=1,table.getn(singleWave) do
+          print(frequency, VLin, Vpp, phaseC/Vpp* math.sqrt(omega) *1565856180.88521 -57.2098793899397 , smua.nvbuffer2[i], phaseC/Vpp, phaseS/Vpp,singleWave[i],2*math.pi* phase/cc)
+        end
+    else 
+        print(frequency, 0, Vpp, timeEnd/4031000 , maxI/Vpp, timeEnd,0,maxI,timeEnd)
+    end
 
 end
 
@@ -1387,8 +1401,10 @@ additional = "#Additional"
 
 if (additional=="IVC") then 
     if (doCap==1) then 
-        AC_Waveform_Sweep(.01,0, 15, 30,  10e-9,10,1)
-        Square_Waveform_Sweep(.01, 40, 80,  10e-9)
+        reset()
+        AC_Waveform_Sweep(.01,0, 15, 30,  10e-9,10,1,0)
+        Square_Waveform_Sweep(.01, 40, 80,  10e-9,0,0)
+        smua.source.output = smua.OUTPUT_OFF
     else 
         for c=1,2 do
             print(0, 0, 0, 0 , 0, 0,0,0,0)
@@ -1397,13 +1413,70 @@ if (additional=="IVC") then
     print("{COMPLETE}")
 end
 
-if (additional=="Break") then 
+if (additional=="Breakdown") then 
     if (doCap==1) then 
-        for v=-1,1,.1 do
-        AC_Waveform_Sweep(.01,0, 2, 10,  10e-9,10,0)
+
+        reset()
+        smua.source.output = 1
+
+        gm_array = gm_vsweep(smua, -1*v, v, 5)
+        first = gm_array[5]*.5
+        for v=.1,20,.5 do
+            gm_array = gm_vsweep(smua, -1*v, v, 5)
+            for i=1,5 do
+                print(0, vbuf[i], 0, 0 , ibuf[i], 0, 0,gm_array[i],0)
+            end
+           
+            if (gm_array[5]<first) then break        end
         end
+        
+        smua.source.output = 0
+
     else 
-        for c=1,10 do
+        for c=1,15 do
+            print(0, 0, 0, 0 , 0, 0,0,0,0)
+        end
+    end
+    print("{COMPLETE}")
+end
+
+if (additional=="Transconductance") then 
+    if (doCap==1) then 
+
+        reset()
+        smua.source.output = 1
+        gm_array, ibuf, vbuf  = gm_vsweep(smua, -.1, .1, 100)
+        for i=1,100 do
+            print(0, vbuf[i], 0, 0 , ibuf[i], 0, 0,gm_array[i],0)
+        end
+        smua.source.output = 0
+
+    else 
+        for c=1,15 do
+            print(0, 0, 0, 0 , 0, 0,0,0,0)
+        end
+    end
+    print("{COMPLETE}")
+end
+
+if (additional=="Joule") then 
+    if (doCap==1) then 
+        reset()
+        smua.source.limiti = 1e-9
+        smua.source.levelv = 7
+        smua.source.output = 1
+
+        first =.5*( smua.measure.i() + smua.measure.i() + smua.measure.i() + smua.measure.i() )/4
+
+        for v=0,100 do
+            delay(.5)
+            reading =( smua.measure.i() + smua.measure.i() + smua.measure.i() + smua.measure.i() )/4
+            print(0, 7, 0, 0 , 0, 0, 0,reading,0)
+            if (reading<first) then break end
+        end
+        smua.source.output = smua.OUTPUT_OFF
+    else 
+        for c=1,2 do
             print(0, 0, 0, 0 , 0, 0,0,0,0)
         end
     end
@@ -1412,11 +1485,13 @@ end
 
 if (additional=="dC/dV") then
     if (doCap==1) then 
+        reset()
         for v=-1,1,.1 do
-            AC_Waveform_Sweep(.01, v, 200, 400,  10e-9,1,0)
+            AC_Waveform_Sweep(.01, v, 200, 400,  10e-9,1,0,1)
         end
+        smua.source.output = smua.OUTPUT_OFF
     else 
-        for c=1,10 do
+        for c=1,2 do
             print(0, 0, 0, 0 , 0, 0,0,0,0)
         end
     end
@@ -1426,16 +1501,18 @@ end
 
 if (additional=="C/F") then
     if (doCap==1) then 
-        AC_Waveform_Sweep(.01,0, 10, 10,  10e-9,5,1)
-        AC_Waveform_Sweep(.01,0, 15, 30,  10e-9,5,1)
-        AC_Waveform_Sweep(.01,0, 30, 60,  10e-9,5,1)
-        AC_Waveform_Sweep(.01,0, 100, 100,  10e-9,1,1)
-        AC_Waveform_Sweep(.01,0, 100, 200,  10e-9,1,1)
-        AC_Waveform_Sweep(.01,0, 150, 300,  10e-9,1,1)
-        AC_Waveform_Sweep(.01,0, 150, 400,  10e-9,1,1)
-        AC_Waveform_Sweep(.01,0, 150, 600,  10e-9,1,1)
-        AC_Waveform_Sweep(.01,0, 150, 800,  10e-9,1,1)
-        AC_Waveform_Sweep(.01,0, 150, 1000,  10e-9,1,1)
+        reset()
+        AC_Waveform_Sweep(.01,0, 10, 10,  10e-9,5,1,1)
+        AC_Waveform_Sweep(.01,0, 15, 30,  10e-9,5,1,1)
+        AC_Waveform_Sweep(.01,0, 30, 60,  10e-9,5,1,1)
+        AC_Waveform_Sweep(.01,0, 100, 100,  10e-9,1,1,1)
+        AC_Waveform_Sweep(.01,0, 100, 200,  10e-9,1,1,1)
+        AC_Waveform_Sweep(.01,0, 150, 300,  10e-9,1,1,1)
+        AC_Waveform_Sweep(.01,0, 150, 400,  10e-9,1,1,1)
+        AC_Waveform_Sweep(.01,0, 150, 600,  10e-9,1,1,1)
+        AC_Waveform_Sweep(.01,0, 150, 800,  10e-9,1,1,1)
+        AC_Waveform_Sweep(.01,0, 150, 900,  10e-9,1,1,1)
+        smua.source.output = smua.OUTPUT_OFF
     else 
         for c=1,10 do
             print(0, 0, 0, 0 , 0, 0,0,0,0)
@@ -1444,4 +1521,37 @@ if (additional=="C/F") then
     print("{COMPLETE}")
 end
 
+if (additional=="Leakage") then
+    if (doCap==1) then 
+        reset()
+        smua.source.highc = smua.ENABLE
+        smua.source.levelv = 5
+        smua.source.output = smua.OUTPUT_ON
+        delay(1)
+        imeas =  i_leakage_measure(smua, 0, 1e-3, 300e-3, 100e-12, 100e-3)
+        print(0, 0, 5, 0 , 0, 0, 0,imeas,0)
+        
+        smua.source.output = smua.OUTPUT_OFF
+    else 
+            print(0, 0, 0, 0 , 0, 0,0,0,0)
+    end
+    print("{COMPLETE}")
+end
 
+if (additional=="Leakage Threshold") then
+    if (doCap==1) then 
+        reset()
+        smua.source.highc = smua.ENABLE
+        smua.source.levelv = 5
+        smua.source.output = smua.OUTPUT_ON
+        delay(1)
+        pass = i_leakage_threshold(smua, 0, 1e-3,300e-3, 100e-12, 100e-6, 10e-12, 1)
+        print(0, 0, 5, pass , 0, 0, 0, 10e-12 ,0)
+        smua.source.output = smua.OUTPUT_OFF
+    else 
+       
+            print(0, 0, 0, 0 , 0, 0,0,0,0)
+       
+    end
+    print("{COMPLETE}")
+end

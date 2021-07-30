@@ -41,7 +41,9 @@ namespace LabviewDXFViewer.DataTypes
         [Description("dC/dV")]
         dCdV=4,
         [Description("C/F")]
-        CF =5
+        CF =5,
+        Leakage =6,
+        LeakageThreshold=7
     }
 
 

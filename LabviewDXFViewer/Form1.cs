@@ -68,18 +68,18 @@ namespace LabviewDXFViewer
         public static string pass="";
         private void Form1_Load(object sender, EventArgs e)
         {
-            var sites=
-            microsites1.HomographyProjection(
-                new int[3, 2] { { -5625, -7000 }, { 4875, -6999 }, { -5624, 7000 } },
-                new int[3, 2] { { 39769, 34322 }, { 33164, 34321 }, { 39767, 25516 } },
-                new int[3,2] { {-5625,-7000 },{4875,-6999 },{-5624,7000 } });
+            //var sites=
+            //microsites1.AlignmentProjection(
+            //    new int[2, 2] { { -5625, -7000 }, { 4875, -6999 } },//, { -5624, 7000 } },
+            //    new int[3, 3] { { 39965, 34317,7883 }, { 33360, 34316,6625 }, { 39964, 25511,5367 } },
+            //    new int[4,2] { {-5625,-7000 },{4875,-6999 },{-5624,7000 }, { 4875, 7000 } });
 
 
-            sites =
-            microsites1.HomographyProjection(
-                new int[2, 2] { { -5625, -7000 }, { 4875, -6999 } },
-                new int[2, 2] { { 39769, 34322 }, { 33164, 34321 } },
-                new int[3, 2] { { -5625, -7000 }, { 4875, -6999 }, { -5624, 7000 } });
+            var sites2 =
+               microsites1.AlignmentProjection(
+                   new int[3, 2] { { -1050, -625 }, { 300, -625 } , { -1050, 625 } },
+                   new int[3, 3] { { 36947, 30348, 8702 }, { 36035, 30348, 8702 }, { 36947, 29562, 8701 } },
+                   new int[3, 2] { { -1050, -625 }, { 300, -625 }, { -1050, 625 } });
 
             try
             {
