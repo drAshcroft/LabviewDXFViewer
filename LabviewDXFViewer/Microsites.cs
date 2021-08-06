@@ -773,7 +773,13 @@ namespace LabviewDXFViewer
                 if (angleChange1 < 0) angleChange1 = 6.28 + angleChange1;
                 if (angleChange2 < 0) angleChange2 = 6.28 + angleChange2;
 
-                var angleChange = (angleChange1 + angleChange2) / 2;
+                if (angleChange1 > 5 && angleChange2 < 3)
+                    angleChange2 += 6.28;
+                if (angleChange2 > 5 && angleChange1 < 3)
+                    angleChange1 += 6.28;
+
+
+                var angleChange = ((angleChange1 + angleChange2) / 2) % 6.28;
                 var reScale = (reScale1 + reScale2) / 2;
 
 

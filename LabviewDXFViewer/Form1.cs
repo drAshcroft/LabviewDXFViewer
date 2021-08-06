@@ -57,7 +57,12 @@ namespace LabviewDXFViewer
         {
             try
             {
-                microsites1.LoadListSitesCloud(comboBox1.Text);
+                var dxf = File.ReadAllText(@"D:\Projects\RaxTagServer\BE-O.21.03.26-D1.dxf");
+                var json = File.ReadAllText(@"D:\Projects\RaxTagServer\BE-O.21.03.26-D1.json");
+
+                microsites1.LoadListSitesLV("BE-O.21.03.26-D1", dxf, json);// comboBox1.Text);
+
+                microsites1.GetSecondCorner();
             }
             catch (Exception ex)
             {

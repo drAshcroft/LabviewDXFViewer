@@ -1419,15 +1419,15 @@ if (additional=="Breakdown") then
         reset()
         smua.source.output = 1
 
-        gm_array = gm_vsweep(smua, -1*v, v, 5)
-        first = gm_array[5]*.5
+        gm_array = gm_vsweep(smua, -.5, .5, 10)
+        first = gm_array[9]*.25
         for v=.1,20,.5 do
-            gm_array = gm_vsweep(smua, -1*v, v, 5)
-            for i=1,5 do
-                print(0, vbuf[i], 0, 0 , ibuf[i], 0, 0,gm_array[i],0)
+            gm_array ,ibuf,vbuf= gm_vsweep(smua, -1*v, v, 10)
+            for i=1,10 do
+                print(i, vbuf[i], 0, 0 , ibuf[i], 0, 0,gm_array[i],0)
             end
            
-            if (gm_array[5]<first) then break        end
+            if (v>3 and gm_array[9]<first) then break        end
         end
         
         smua.source.output = 0
@@ -1471,7 +1471,8 @@ if (additional=="Joule") then
         for v=0,100 do
             delay(.5)
             reading =( smua.measure.i() + smua.measure.i() + smua.measure.i() + smua.measure.i() )/4
-            print(0, 7, 0, 0 , 0, 0, 0,reading,0)
+            time = os.date("*t")
+           print(0, 1, 0,60*60*time.hour+ 60*time.min+ time.sec , 0, 0, 0,reading,0)
             if (reading<first) then break end
         end
         smua.source.output = smua.OUTPUT_OFF
