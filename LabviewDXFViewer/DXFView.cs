@@ -27,8 +27,55 @@ namespace LabviewDXFViewer
     public class DXFView
     {
         public DXFLayer[] Layers { get; set; }
+
+        public void LoadFile(System.IO.Stream file)
+        {
+
+            DxfDocument loaded = DxfDocument.Load(file);
+            Layers = loaded.Layers.OrderBy(x => x.Name).Select(x => new DXFLayer { LayerName = x.Name, Visible = true, color = x.Color.ToColor() }).ToArray();
+
+
+            Shapes = new List<DXFShape>();
+
+            foreach (var block in loaded.Blocks)
+            {
+                foreach (var shape in block.Entities)
+                {
+                    switch (shape.Type)
+                    {
+                        case EntityType.Polyline:
+                            Shapes.Add(new DXFPolyline(shape.Color.ToColor(), 1, shape.Layer.Name));
+                            break;
+                        case EntityType.LightWeightPolyline:
+
+                            Color color = shape.Color.ToColor();
+                            if (shape.Color.IsByLayer)
+                                color = shape.Layer.Color.ToColor();
+                            var pl = new DXFPolyline(color, 1, shape.Layer.Name);
+                            var specificShape = (LwPolyline)shape;
+                            for (int i = 1; i < specificShape.Vertexes.Count; i++)
+                            {
+                                pl.AppendLine(new DFXLine(
+                                     new System.Drawing.Point((int)specificShape.Vertexes[i - 1].Position.X, (int)specificShape.Vertexes[i - 1].Position.Y),
+                                     new System.Drawing.Point((int)specificShape.Vertexes[i].Position.X, (int)specificShape.Vertexes[i].Position.Y),
+                                     color,
+                                     (int)specificShape.Vertexes[i].StartWidth)
+                                    );
+                            }
+                            Shapes.Add(pl);
+                            break;
+                        case EntityType.Hatch:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+
         public void LoadFile(string filename)
         {
+            
             DxfDocument loaded = DxfDocument.Load(filename);
             Layers = loaded.Layers.OrderBy(x => x.Name).Select(x => new DXFLayer { LayerName = x.Name, Visible = true, color = x.Color.ToColor() }).ToArray();
 

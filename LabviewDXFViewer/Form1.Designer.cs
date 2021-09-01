@@ -38,7 +38,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(613, 437);
+            this.button1.Location = new System.Drawing.Point(970, 0);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(115, 23);
             this.button1.TabIndex = 0;
@@ -48,7 +48,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(1013, 437);
+            this.button2.Location = new System.Drawing.Point(1370, 0);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 5;
@@ -58,7 +58,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(932, 437);
+            this.button3.Location = new System.Drawing.Point(1289, 0);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 6;
@@ -69,13 +69,16 @@
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(734, 438);
+            this.comboBox1.Location = new System.Drawing.Point(1091, 1);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(192, 21);
             this.comboBox1.TabIndex = 7;
             // 
             // microsites1
             // 
+            this.microsites1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.microsites1.Canvas = null;
             this.microsites1.Location = new System.Drawing.Point(721, 32);
             this.microsites1.Name = "microsites1";
@@ -84,12 +87,11 @@
             // 
             // dxfCanvas1
             // 
-            this.dxfCanvas1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dxfCanvas1.Location = new System.Drawing.Point(12, 32);
+            this.dxfCanvas1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.dxfCanvas1.Location = new System.Drawing.Point(0, 0);
             this.dxfCanvas1.Name = "dxfCanvas1";
-            this.dxfCanvas1.Size = new System.Drawing.Size(1060, 386);
+            this.dxfCanvas1.Size = new System.Drawing.Size(715, 477);
             this.dxfCanvas1.TabIndex = 1;
             // 
             // Form1

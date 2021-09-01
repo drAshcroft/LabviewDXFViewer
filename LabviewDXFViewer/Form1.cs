@@ -45,7 +45,7 @@ namespace LabviewDXFViewer
         {
             try
             {
-                microsites1.SaveListSitesCloud(comboBox1.Text);
+                microsites1.SaveListSitesCloudO(comboBox1.Text);
             }
             catch (Exception ex)
             {
@@ -65,10 +65,12 @@ namespace LabviewDXFViewer
             }
         }
 
+        public static string pass="";
         private void Form1_Load(object sender, EventArgs e)
         {
             try
             {
+                pass = File.ReadAllText(".\\settings.txt");
                 comboBox1.Items.AddRange(microsites1.LoadWaferPlansCloud());
             }
             catch { }

@@ -17,8 +17,8 @@ namespace LabviewDXFViewer
 {
     public partial class Microsites : UserControl
     {
-        // public static string WebHost = "https://raxdatastore.azurewebsites.net/api/";
-        public static string WebHost = "http://localhost:7071/api/";
+        // public static string WebHost = "https://raxdatastore2.azurewebsites.net/api/";
+        public static string WebHost = "http://localhost:7073/api/";
         public Microsites()
         {
             InitializeComponent();
@@ -55,7 +55,7 @@ namespace LabviewDXFViewer
             };
 
 
-            var result = (WebHost + $"DataUploadJson?code=dG3i8BEApZF3cS00grJdfbpClSsPfPJ9oH2lLa4FyLtcReGbrmyp0w==&Tags=W005|D2|JUNCTIONS|B1B2|IV|UNSHUNT&DataType=IV_SERIES").PostStringAsync("test").Result;
+            var result = (WebHost + $"DataUploadJson?Tags=W005|D2|JUNCTIONS|B1B2|IV|UNSHUNT&DataType=IV_SERIES").WithHeader("Authorization", Form1.pass).WithHeader("x-user", "probe").PostStringAsync("test").Result;
 
         }
         public void SaveListSitesCloudO(string waferName)
@@ -71,13 +71,13 @@ namespace LabviewDXFViewer
             };
 
 
-            var resp = (WebHost + "WaferPlanLoad").PostMultipartAsync(mp => mp
+            var resp = (WebHost + "WaferPlanLoad").WithHeader("Authorization", Form1.pass).WithHeader("x-user", "probe").PostMultipartAsync(mp => mp
                     .AddString("title", waferName)
                     .AddFile("file", filename)
                  ).Result;
 
 
-            var result = (WebHost + "WaferTestSiteLoad?code=dG3i8BEApZF3cS00grJdfbpClSsPfPJ9oH2lLa4FyLtcReGbrmyp0w==&blob=" + Path.GetFileName(filename)).PostJsonAsync(saveData).Result;
+            var result = (WebHost + "WaferTestSiteLoad?blob=" + Path.GetFileName(filename)).WithHeader("Authorization", Form1.pass).WithHeader("x-user", "probe").PostJsonAsync(saveData).Result;
 
         }
 
@@ -99,7 +99,7 @@ namespace LabviewDXFViewer
 
         public string[] LoadWaferPlansCloud()
         {
-            var result = (WebHost + "WaferPlanNames?code=SZ7L74ejL0kPdEXzzjsz7eHToJ/JoEd80ocG5DEbaqE3mv4sdO6euA==").GetJsonAsync<string[]>().Result;
+            var result = (WebHost + "WaferPlanNames").WithHeader("Authorization", Form1.pass).WithHeader("x-user", "probe").GetJsonAsync<string[]>().Result;
             return result;
 
         }
@@ -144,14 +144,14 @@ namespace LabviewDXFViewer
 
             var filename = dir + "\\" + waferName + ".dxf";
 
-            var dxf = (WebHost + "WaferPlanDXFView?WaferName=" + waferName + "&code=BdTxfpvmw2aahMiFoXpPgHHxyuUv8yq5Svd3BmcinOAaGLkNtXJayQ==").GetStreamAsync().Result;
+            var dxf = (WebHost + "WaferPlanDXFView?WaferName=" + waferName).WithHeader("Authorization", Form1.pass).WithHeader("x-user", "probe").GetStreamAsync().Result;
             using (var fileStream = File.Create(filename))
             {
                 dxf.CopyTo(fileStream);
             }
             Canvas.LoadFile(filename);
 
-            var result = (WebHost + "WaferTestSiteView?WaferName=" + waferName + "&code=7qEXL895pHq3Sl9YRkamCvsoCAoVcacaz0OFLx5uM2/m9tc8eWo5hA==").GetJsonAsync<WaferInfo>().Result;
+            var result = (WebHost + "WaferTestSiteView?WaferName=" + waferName).WithHeader("Authorization", Form1.pass).WithHeader("x-user", "probe").GetJsonAsync<WaferInfo>().Result;
 
             var addData = new List<ProbeSite>();
             Canvas.LoadLayerActivation(result.activeLayer.Replace("||", " "));
@@ -229,7 +229,7 @@ namespace LabviewDXFViewer
             GetFirstCorner(ProbeOrientation.Horizontal);
         }
 
-        public  string ToSignificantDigits(
+        public string ToSignificantDigits(
      double value, int significant_digits)
         {
             // Use G format to get significant digits.
@@ -262,7 +262,7 @@ namespace LabviewDXFViewer
             return result;
         }
 
-        private  string ToEngineeringNotation( double d)
+        private string ToEngineeringNotation(double d)
         {
             double exponent = Math.Log10(Math.Abs(d));
             if (Math.Abs(d) >= 1)
@@ -272,7 +272,7 @@ namespace LabviewDXFViewer
                     case 0:
                     case 1:
                     case 2:
-                        return ToSignificantDigits( d, 3);
+                        return ToSignificantDigits(d, 3);
                     case 3:
                     case 4:
                     case 5:
@@ -355,7 +355,7 @@ namespace LabviewDXFViewer
                 {
                     if (dataGridView1.Rows[i].Cells[0].Value.ToString() == site.JunctionName)
                     {
-                        dataGridView1.Rows[i].Cells[3].Value = ToEngineeringNotation( conductance) + conductUnit;
+                        dataGridView1.Rows[i].Cells[3].Value = ToEngineeringNotation(conductance) + conductUnit;
                         dataGridView1.Rows[i].Cells[4].Value = ToEngineeringNotation(capacitance) + capUnit;
                         dataGridView1.Rows[i].Cells[5].Value = ToEngineeringNotation(intercept) + interceptUnit;
                         dataGridView1.Rows[i].Selected = true;
@@ -405,11 +405,15 @@ namespace LabviewDXFViewer
             {
                 if (dataGridView1.Rows[i].Cells[2].Value != null)
                 {
+                    double w = double.Parse(dataGridView1.Rows[i].Cells[6].Value == null ? "0" : "0" + dataGridView1.Rows[i].Cells[6].Value.ToString());
+                    double h = double.Parse(dataGridView1.Rows[i].Cells[7].Value == null ? "0" : "0" + dataGridView1.Rows[i].Cells[7].Value.ToString());
                     sites.Add(new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
                     {
                         JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
                         Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
-                        Area = double.Parse(dataGridView1.Rows[i].Cells[6].Value == null ? "0" : "0" + dataGridView1.Rows[i].Cells[6].Value.ToString())
+                        Area = w * h,
+                        BottomWidth = w,
+                        TopWidth = h
                     });
                 }
             }
@@ -425,11 +429,15 @@ namespace LabviewDXFViewer
             {
                 if (dataGridView1.Rows[i].Cells[2].Value != null && dataGridView1.Rows[i].Cells[2].Value.ToString().ToLower() == sOrientation)
                 {
+                    double w = double.Parse(dataGridView1.Rows[i].Cells[6].Value == null ? "0" : "0" + dataGridView1.Rows[i].Cells[6].Value.ToString());
+                    double h = double.Parse(dataGridView1.Rows[i].Cells[7].Value == null ? "0" : "0" + dataGridView1.Rows[i].Cells[6].Value.ToString());
                     sites.Add(new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
                     {
                         JunctionName = (string)dataGridView1.Rows[i].Cells[0].Value,
                         Orientation = (string)dataGridView1.Rows[i].Cells[2].Value,
-                        Area = double.Parse(dataGridView1.Rows[i].Cells[6].Value == null ? "0" : dataGridView1.Rows[i].Cells[6].Value.ToString())
+                        Area = w * h,
+                        BottomWidth = w,
+                        TopWidth = h
                     });
                 }
             }
