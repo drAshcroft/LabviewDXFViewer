@@ -38,7 +38,6 @@ namespace LabviewDXFViewer
             this.Intercept = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TopWidth = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BottomWidth = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -53,14 +52,13 @@ namespace LabviewDXFViewer
             this.Capacitance,
             this.Intercept,
             this.TopWidth,
-            this.BottomWidth,
-            this.Area});
+            this.BottomWidth});
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(901, 511);
             this.dataGridView1.TabIndex = 0;
-            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
             this.dataGridView1.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseUp);
             this.dataGridView1.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_RowEnter);
@@ -78,10 +76,17 @@ namespace LabviewDXFViewer
             // 
             // Orientation
             // 
-            this.Orientation.HeaderText = "Orientation";
+            this.Orientation.HeaderText = "Function";
             this.Orientation.Items.AddRange(new object[] {
-            "Horizontal",
-            "Vertical"});
+            "IV",
+            "IVC",
+            "Transconductance",
+            "Breakdown",
+            "Joule",
+            "dC/dV",
+            "C/F",
+            "Leakage",
+            "Leakage Threshold"});
             this.Orientation.Name = "Orientation";
             // 
             // Result
@@ -96,23 +101,18 @@ namespace LabviewDXFViewer
             // 
             // Intercept
             // 
-            this.Intercept.HeaderText = "Intercept";
+            this.Intercept.HeaderText = "Oxide";
             this.Intercept.Name = "Intercept";
             // 
             // TopWidth
             // 
-            this.TopWidth.HeaderText = "Top Width";
+            this.TopWidth.HeaderText = "Top Width (μm)";
             this.TopWidth.Name = "TopWidth";
             // 
             // BottomWidth
             // 
-            this.BottomWidth.HeaderText = "Bottom Width";
+            this.BottomWidth.HeaderText = "Bottom Width (μm)";
             this.BottomWidth.Name = "BottomWidth";
-            // 
-            // Area
-            // 
-            this.Area.HeaderText = "Area";
-            this.Area.Name = "Area";
             // 
             // Microsites
             // 
@@ -137,6 +137,5 @@ namespace LabviewDXFViewer
         private System.Windows.Forms.DataGridViewTextBoxColumn Intercept;
         private System.Windows.Forms.DataGridViewTextBoxColumn TopWidth;
         private System.Windows.Forms.DataGridViewTextBoxColumn BottomWidth;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Area;
     }
 }
