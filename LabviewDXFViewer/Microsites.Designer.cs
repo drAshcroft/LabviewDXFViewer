@@ -101,7 +101,7 @@ namespace LabviewDXFViewer
             // 
             // Intercept
             // 
-            this.Intercept.HeaderText = "Oxide";
+            this.Intercept.HeaderText = "Intercept";
             this.Intercept.Name = "Intercept";
             // 
             // TopWidth

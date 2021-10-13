@@ -75,7 +75,7 @@ namespace LabviewDXFViewer
 
         public void LoadFile(string filename)
         {
-            
+
             DxfDocument loaded = DxfDocument.Load(filename);
             Layers = loaded.Layers.OrderBy(x => x.Name).Select(x => new DXFLayer { LayerName = x.Name, Visible = true, color = x.Color.ToColor() }).ToArray();
 
@@ -188,7 +188,7 @@ namespace LabviewDXFViewer
 
                 }
 
-                if (Marker!=null && Marker.X!=0 && Marker.Y!=0)
+                if (Marker != null && Marker.X != 0 && Marker.Y != 0)
                 {
                     using (var lePen2 = new Pen(Color.AliceBlue, 4))
                     {
@@ -224,9 +224,6 @@ namespace LabviewDXFViewer
                 lePen.Dispose();
                 brush.Dispose();
             }
-
-
-          
         }
 
         public System.Drawing.Point[] SelectedLocations
@@ -234,7 +231,7 @@ namespace LabviewDXFViewer
             get
             {
                 List<System.Drawing.Point> selected = new List<System.Drawing.Point>();
-                
+
                 foreach (var obj in Shapes)                     //iterates through the objects
                 {
                     var selec = obj.SelectedLocations;
@@ -246,8 +243,6 @@ namespace LabviewDXFViewer
                     }
                 }
 
-                
-
                 return selected.OrderBy(x => x.Y * 10000 + x.X).ToArray();
             }
         }
@@ -255,21 +250,32 @@ namespace LabviewDXFViewer
         public bool HilightWaferPoint(System.Drawing.Point picPoint)
         {
             var drawList = Layers.Where(it => it.Visible).Select(it => it.LayerName).ToList();
-
             bool hitTest = false;
-            foreach (var obj in Shapes)                     //iterates through the objects
+
+
+            DXFPolyline biggest = null;
+            int maxWidth = 0;
+
+
+            foreach (var obj in Shapes)
             {
                 DXFPolyline temp = (DXFPolyline)obj;
                 if (drawList.Contains(temp.LayerIndex))
                 {
-
-                    if (temp.Highlight(picPoint))
+                    if (temp.HitTest(picPoint))
                     {
+                        if (temp.ItemLineWidth > maxWidth)
+                        {
+                            maxWidth = temp.ItemLineWidth;
+                            biggest = temp;
+                        }
                         hitTest |= true;
-                        break;
+                        // break;
                     }
                 }
             }
+            biggest.Highlight(picPoint);
+
             return hitTest;
         }
 
@@ -279,21 +285,31 @@ namespace LabviewDXFViewer
             var y = picPoint.Y / mainScale + YMin;
             var drawList = Layers.Where(it => it.Visible).Select(it => it.LayerName).ToList();
 
+            var hitPoint = new System.Drawing.Point((int)x, (int)y);
             bool hitTest = false;
+            DXFPolyline biggest = null;
+            int maxWidth = 0;
             foreach (var obj in Shapes)                     //iterates through the objects
             {
                 DXFPolyline temp = (DXFPolyline)obj;
                 if (drawList.Contains(temp.LayerIndex))
                 {
 
-                    if (temp.Highlight(new System.Drawing.Point((int)x, (int)y)))
+                    if (temp.HitTest(hitPoint))
                     {
+                        if (temp.ItemLineWidth > maxWidth)
+                        {
+                            maxWidth = temp.ItemLineWidth;
+                            biggest = temp;
+                        }
+
                         hitTest |= true;
-                        break;
+
                     }
                 }
             }
-
+            if (biggest != null)
+                biggest.Highlight(hitPoint);
             if (rotate90)
             {
                 foreach (var obj in Shapes)                     //iterates through the objects

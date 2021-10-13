@@ -28,6 +28,10 @@ namespace DXFImporter
 
         public string LayerIndex { get; set; }
 
+        public int GetLineWidth()
+        {
+            return lineWidth;
+        }
         public abstract Color AccessContourColor
         {
             get;
@@ -52,7 +56,7 @@ namespace DXFImporter
             set;
         }
 
-        public abstract void Draw(Pen pen, Graphics g, double scale, Point offset );
+        public abstract void Draw(Pen pen, Graphics g, double scale, Point offset);
         public virtual bool Highlight(Point point) { return false; }
 
         public abstract Rectangle Bounds
@@ -63,7 +67,7 @@ namespace DXFImporter
         public abstract System.Drawing.Point[] SelectedLocations
         {
             get;
-             
+
         }
 
     }
@@ -151,7 +155,7 @@ namespace DXFImporter
                 if (highlighted)
                 {
                     lePen.Color = Color.Red;
-                   
+
                 }
 
                 g.DrawLine(lePen, (float)(startPoint.X - offset.X) * (float)scale, (float)(startPoint.Y - offset.Y) * (float)scale,
@@ -159,7 +163,7 @@ namespace DXFImporter
             }
         }
 
-      
+
 
         public virtual Point StartPoint
         {
@@ -178,16 +182,16 @@ namespace DXFImporter
             }
         }
 
-        public override bool Highlight( Point point)
+        public override bool Highlight(Point point)
         {
             GraphicsPath areaPath;
-           // Pen areaPen;
+            // Pen areaPen;
             Region areaRegion;
 
             // Create path which contains wide line
             // for easy mouse selection
             areaPath = new GraphicsPath();
-          var   areaPen = new Pen(Color.Red, lineWidth);
+            var areaPen = new Pen(Color.Red, lineWidth);
 
             areaPath.AddLine(StartPoint.X, StartPoint.Y, EndPoint.X, EndPoint.Y);
             // startPoint and EndPoint are class members of type Point
@@ -214,6 +218,41 @@ namespace DXFImporter
             return false;
         }
 
+        public  bool HitTest(Point point)
+        {
+            GraphicsPath areaPath;
+            // Pen areaPen;
+            Region areaRegion;
+
+            // Create path which contains wide line
+            // for easy mouse selection
+            areaPath = new GraphicsPath();
+            var areaPen = new Pen(Color.Red, lineWidth);
+
+            areaPath.AddLine(StartPoint.X, StartPoint.Y, EndPoint.X, EndPoint.Y);
+            // startPoint and EndPoint are class members of type Point
+            areaPath.Widen(areaPen);
+
+            // Create region from the path
+            areaRegion = new Region(areaPath);
+
+            if (areaRegion.IsVisible(point) == true)
+            {
+                //g.DrawLine(pen, GetStartPoint, GetEndPoint);
+
+                //g.DrawLine(pen, GetStartPoint.X, GetStartPoint.Y , GetEndPoint.X, GetEndPoint.Y);
+                areaPath.Dispose();
+                areaPen.Dispose();
+                areaRegion.Dispose();
+
+                return true;
+            }
+            areaPath.Dispose();
+            areaPen.Dispose();
+            areaRegion.Dispose();
+            return false;
+        }
+
 
         public override System.Drawing.Point[] SelectedLocations
         {
@@ -221,7 +260,7 @@ namespace DXFImporter
             {
                 if (highlighted)
                 {
-                    return new System.Drawing.Point[] { new System.Drawing.Point( (startPoint.X+endPoint.X)/2, (startPoint.Y + endPoint.Y) / 2) };
+                    return new System.Drawing.Point[] { new System.Drawing.Point( 10*(int)Math.Ceiling( (startPoint.X + endPoint.X+.5) / 20d), 10 * (int)Math.Ceiling((.5+startPoint.Y + endPoint.Y) / 20d)) };
                 }
                 else
                     return null;
@@ -815,7 +854,7 @@ namespace DXFImporter
 
         private double XMax = double.MinValue, XMin = double.MaxValue;
         private double YMax = double.MinValue, YMin = double.MaxValue;
-        
+
         private ArrayList listOfLines;
 
         public DXFPolyline(Color color, int w, string layerIndex)
@@ -865,6 +904,27 @@ namespace DXFImporter
 
         }
 
+        public  int ItemLineWidth
+        {
+            get
+            {
+                foreach (var item in listOfLines)
+                {
+                    var temp = item as DXFShape;
+                    if (temp!=null)
+                    {
+                        return temp.GetLineWidth();
+                    }
+                }
+                return 0;
+            }
+            set
+            {
+                lineWidth = value;
+            }
+
+        }
+
         public override int AccessRotation
         {
             get
@@ -888,7 +948,7 @@ namespace DXFImporter
             foreach (DFXLine obj in listOfLines)
             {
 
-                obj.Draw(pen, g,scale, offset);
+                obj.Draw(pen, g, scale, offset);
             }
 
         }
@@ -912,12 +972,11 @@ namespace DXFImporter
             }
         }
 
-
-        public override bool Highlight( Point point)
+        public  bool HitTest(Point point)
         {
             foreach (DFXLine obj in listOfLines)
             {
-                if (obj.Highlight( point))
+                if (obj.HitTest(point))
                 {
                     return true;
                 }
@@ -926,7 +985,21 @@ namespace DXFImporter
             return false;
         }
 
-      
+
+        public override bool Highlight(Point point)
+        {
+            foreach (DFXLine obj in listOfLines)
+            {
+                if (obj.Highlight(point))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
 
         public void AppendLine(DFXLine theLine)
         {

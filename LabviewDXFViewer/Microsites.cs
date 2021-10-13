@@ -1,18 +1,15 @@
-﻿using LabviewDXFViewer.DataTypes;
+﻿using Accord.Imaging;
+using Flurl.Http;
+using LabviewDXFViewer.DataTypes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Windows.Forms;
-using Flurl;
-using Flurl.Http;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using Newtonsoft.Json;
-using Accord.Imaging;
+using System.Windows.Forms;
 
 namespace LabviewDXFViewer
 {

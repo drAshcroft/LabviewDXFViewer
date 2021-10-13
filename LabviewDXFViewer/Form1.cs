@@ -57,10 +57,10 @@ namespace LabviewDXFViewer
         {
             try
             {
-                var dxf = File.ReadAllText(@"D:\Projects\RaxTagServer\BE-O.21.03.26-D1.dxf");
-                var json = File.ReadAllText(@"D:\Projects\RaxTagServer\BE-O.21.03.26-D1.json");
+                var dxf = File.ReadAllText(@"E:\WaferPlans\DXFFiles\FGmask-N1.dxf");
+                var json = File.ReadAllText(@"E:\WaferPlans\FGmask-N1.json");
 
-                microsites1.LoadListSitesLV("BE-O.21.03.26-D1", dxf, json);// comboBox1.Text);
+                microsites1.LoadListSitesLV("FGmask-N1", dxf, json);// comboBox1.Text);
 
                 microsites1.GetSecondCorner();
             }
@@ -80,18 +80,18 @@ namespace LabviewDXFViewer
             //    new int[4,2] { {-5625,-7000 },{4875,-6999 },{-5624,7000 }, { 4875, 7000 } });
 
 
-            var sites2 =
-               microsites1.AlignmentProjection(
-                   new int[3, 2] { { -1050, -625 }, { 300, -625 } , { -1050, 625 } },
-                   new int[3, 3] { { 36947, 30348, 8702 }, { 36035, 30348, 8702 }, { 36947, 29562, 8701 } },
-                   new int[3, 2] { { -1050, -625 }, { 300, -625 }, { -1050, 625 } });
+            //var sites2 =
+            //   microsites1.AlignmentProjection(
+            //       new int[3, 2] { { -1050, -625 }, { 300, -625 } , { -1050, 625 } },
+            //       new int[3, 3] { { 36947, 30348, 8702 }, { 36035, 30348, 8702 }, { 36947, 29562, 8701 } },
+            //       new int[3, 2] { { -1050, -625 }, { 300, -625 }, { -1050, 625 } });
 
-            try
-            {
-                pass = File.ReadAllText(".\\settings.txt");
-                comboBox1.Items.AddRange(microsites1.LoadWaferPlansCloud());
-            }
-            catch { }
+            //try
+            //{
+            //    pass = File.ReadAllText(".\\settings.txt");
+            //    comboBox1.Items.AddRange(microsites1.LoadWaferPlansCloud());
+            //}
+            //catch { }
         }
 
      
