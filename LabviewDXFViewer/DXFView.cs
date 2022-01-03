@@ -101,8 +101,8 @@ namespace LabviewDXFViewer
                             for (int i = 1; i < specificShape.Vertexes.Count; i++)
                             {
                                 pl.AppendLine(new DFXLine(
-                                     new System.Drawing.Point((int)specificShape.Vertexes[i - 1].Position.X, (int)specificShape.Vertexes[i - 1].Position.Y),
-                                     new System.Drawing.Point((int)specificShape.Vertexes[i].Position.X, (int)specificShape.Vertexes[i].Position.Y),
+                                     new System.Drawing.Point((int)specificShape.Vertexes[i - 1].Position.X,-1* (int)specificShape.Vertexes[i - 1].Position.Y),
+                                     new System.Drawing.Point((int)specificShape.Vertexes[i].Position.X, -1*(int)specificShape.Vertexes[i].Position.Y),
                                      color,
                                      (int)specificShape.Vertexes[i].StartWidth)
                                     );

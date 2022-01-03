@@ -32,7 +32,7 @@ namespace LabviewDXFViewer
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.JunctionName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Position = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Orientation = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.TestFunction = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Capacitance = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Intercept = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -47,7 +47,7 @@ namespace LabviewDXFViewer
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.JunctionName,
             this.Position,
-            this.Orientation,
+            this.TestFunction,
             this.Result,
             this.Capacitance,
             this.Intercept,
@@ -74,12 +74,14 @@ namespace LabviewDXFViewer
             this.Position.HeaderText = "Position";
             this.Position.Name = "Position";
             // 
-            // Orientation
+            // TestFunction
             // 
-            this.Orientation.HeaderText = "Function";
-            this.Orientation.Items.AddRange(new object[] {
+            this.TestFunction.HeaderText = "Function";
+            this.TestFunction.Items.AddRange(new object[] {
             "IV",
             "IVC",
+            "MidBreak",
+            "WideBreak",
             "Transconductance",
             "Breakdown",
             "Joule",
@@ -87,7 +89,7 @@ namespace LabviewDXFViewer
             "C/F",
             "Leakage",
             "Leakage Threshold"});
-            this.Orientation.Name = "Orientation";
+            this.TestFunction.Name = "TestFunction";
             // 
             // Result
             // 
@@ -106,7 +108,7 @@ namespace LabviewDXFViewer
             // 
             // TopWidth
             // 
-            this.TopWidth.HeaderText = "Top Width (μm)";
+            this.TopWidth.HeaderText = "Test Info";
             this.TopWidth.Name = "TopWidth";
             // 
             // BottomWidth
@@ -131,7 +133,7 @@ namespace LabviewDXFViewer
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.DataGridViewTextBoxColumn JunctionName;
         private System.Windows.Forms.DataGridViewTextBoxColumn Position;
-        private System.Windows.Forms.DataGridViewComboBoxColumn Orientation;
+        private System.Windows.Forms.DataGridViewComboBoxColumn TestFunction;
         private System.Windows.Forms.DataGridViewTextBoxColumn Result;
         private System.Windows.Forms.DataGridViewTextBoxColumn Capacitance;
         private System.Windows.Forms.DataGridViewTextBoxColumn Intercept;

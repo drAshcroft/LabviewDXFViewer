@@ -346,7 +346,7 @@ namespace LabviewDXFViewer
             }
         }
 
-        public void AddResult(ProbeSite site, double conductance, double capacitance, double oxide, string conductUnit, string capUnit, string oxideUnit)
+        public void AddResult(ProbeSite site, double conductance, double capacitance, double oxide, string conductUnit, string capUnit, string oxideUnit, string extraInfo, double extraValue)
         {
             for (int i = dataGridView1.Rows.Count - 1; i >= 0; i--)
             {
@@ -357,6 +357,7 @@ namespace LabviewDXFViewer
                         dataGridView1.Rows[i].Cells[3].Value = ToEngineeringNotation(conductance) + conductUnit;
                         dataGridView1.Rows[i].Cells[4].Value = ToEngineeringNotation(capacitance) + capUnit;
                         dataGridView1.Rows[i].Cells[5].Value = ToEngineeringNotation(oxide) + oxideUnit;
+                        dataGridView1.Rows[i].Cells[6].Value = extraInfo+ ":"+ ToEngineeringNotation(extraValue) ;
                         dataGridView1.Rows[i].Selected = true;
                     }
                 }
@@ -398,13 +399,14 @@ namespace LabviewDXFViewer
 
         public ProbeSite[] GetListData()
         {
-            var sOrientation = Orientation.ToString().ToLower();
+            var sOrientation = TestFunction.ToString().ToLower();
             var sites = new List<ProbeSite>();
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
                 if (dataGridView1.Rows[i].Cells[2].Value != null)
                 {
-                    double w = double.Parse(dataGridView1.Rows[i].Cells[6].Value == null ? "0" : "0" + dataGridView1.Rows[i].Cells[6].Value.ToString());
+                    // double w = double.Parse(dataGridView1.Rows[i].Cells[6].Value == null ? "0" : "0" + dataGridView1.Rows[i].Cells[6].Value.ToString());
+                    double w = 1;
                     double h = double.Parse(dataGridView1.Rows[i].Cells[7].Value == null ? "0" : "0" + dataGridView1.Rows[i].Cells[7].Value.ToString());
                     sites.Add(new ProbeSite((string)dataGridView1.Rows[i].Cells[1].Value)
                     {
@@ -452,7 +454,17 @@ namespace LabviewDXFViewer
 
         //    return sites.OrderBy(x => x.Position.Y * 10000 + x.Position.X / 100).ToArray();
         //}
+        public void SetTestFunctions(string[] functionNames)
+        {
+            TestFunction.Items.Clear();
+            TestFunction.Items.AddRange(functionNames);
+        }
 
+        public void SetTestFunctions(string functionNames)
+        {
+            TestFunction.Items.Clear();
+            TestFunction.Items.AddRange(functionNames.Split(new string[] { "\n", "\r", " " }, StringSplitOptions.RemoveEmptyEntries));
+        }
         public int[] GetFirstCorner()
         {
 
@@ -544,7 +556,7 @@ namespace LabviewDXFViewer
 
         public int[] GetThirdCorner()
         {
-            var sOrientation = Orientation.ToString().ToLower();
+            var sOrientation = TestFunction.ToString().ToLower();
             var sites = new List<ProbeSite>();
 
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
@@ -622,11 +634,11 @@ namespace LabviewDXFViewer
                 if (string.IsNullOrWhiteSpace((string)dataGridView1.Rows[i].Cells[1].Value) == false)
                 {
 
-                    double w = 0;
-                    if (dataGridView1.Rows[i].Cells[6].Value.GetType() == typeof(string))
-                        w = double.Parse(dataGridView1.Rows[i].Cells[6].Value == null ? "0" : "0" + dataGridView1.Rows[i].Cells[6].Value.ToString());
-                    else
-                        w = (double)dataGridView1.Rows[i].Cells[6].Value;
+                    double w = 1;
+                    //if (dataGridView1.Rows[i].Cells[6].Value.GetType() == typeof(string))
+                    //    w = double.Parse(dataGridView1.Rows[i].Cells[6].Value == null ? "0" : "0" + dataGridView1.Rows[i].Cells[6].Value.ToString());
+                    //else
+                    //    w = (double)dataGridView1.Rows[i].Cells[6].Value;
 
                     double h = 0;
                     if (dataGridView1.Rows[i].Cells[7].Value.GetType() == typeof(string))

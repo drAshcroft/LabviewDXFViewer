@@ -94,6 +94,9 @@ namespace LabviewDXFViewer
             //catch { }
         }
 
-     
+        private void button4_Click(object sender, EventArgs e)
+        {
+            microsites1.SetTestFunctions(new string[] { "1", "2", "3" });
+        }
     }
 }
