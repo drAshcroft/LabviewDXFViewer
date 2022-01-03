@@ -809,35 +809,43 @@ function _Sweep()
     CheckSettings()
     Reset()
 
-    smua.source.limiti = 1e-3
+    
+    rangei=1e-9
+    smua.source.limiti = rangei
     smua.source.levelv = .001
+    smua.source.limiti = 1e-3
     smua.source.output = 1
     delay(.1)
-    local reading = smua.measure.i() * 2000
+    local reading = smua.measure.i() * 200
 
-    if (reading < rangei) then
-        rangei = rangei / 100
-        smua.source.output = 1
-        smua.source.limiti = 1e-3
-        smua.measure.rangei = rangei
-        smua.source.levelv = .001
-        delay(.1)
-        reading = smua.measure.i() * 2000
-        if (reading < rangei) then
-            rangei = rangei / 100
-            smua.source.output = 1
-            smua.source.limiti = 1e-3
-            smua.measure.rangei = rangei
-            smua.source.levelv = .001
-            delay(.1)
-            reading = smua.measure.i() * 2000
-            if (reading < rangei) then
-                rangei = rangei / 1000
-                doCap =1
-                smua.source.levelv = 0
-            end
+    if (reading > rangei) then
+
+	if (reading<10e-9) then
+          rangei = 10e-9
+        else
+          rangei = 1e-6
+          smua.measure.rangei = rangei
+          smua.source.levelv = .001
+          smua.source.output = 1
+          delay(.1)
+          reading = smua.measure.i() * 200
+          if (reading > rangei) then
+       		rangei = 1e-6
+        	smua.measure.rangei = rangei
+        	smua.source.levelv = .001
+        	smua.source.output = 1
+        	delay(.1)
+        	reading = smua.measure.i() * 200
+        	if (reading > rangei) then
+                	rangei = 1e-3
+	                doCap =1
+        	        
+                end
+          end
         end
     end
+    smua.source.levelv = 0
+    smua.source.output = 0
 
     ConfigureSmus(rangei)
     ConfigureTriggerLines()
@@ -1263,8 +1271,7 @@ end
 
 
 
-
-function Spectrum_Sweep(Vrms,  limitI,display)
+function Spectrum_Sweep(Vrms,  limitI)
     reset()
 	local COMPLETE = "{COMPLETE}"
 	-- Generate the source values
@@ -1275,7 +1282,8 @@ function Spectrum_Sweep(Vrms,  limitI,display)
     local factor = 6.283185307/pointsPerCycle
 
     for i = 1, numDataPoints do
-        sourceValues[i] = Vpp*   math.sin(i*i*factor )
+        sourceValues[i] = Vpp*   math.sin(math.pow(i,1.7)*factor )
+
     end
 
 	-- Configure the SMU ranges
@@ -1311,7 +1319,7 @@ function Spectrum_Sweep(Vrms,  limitI,display)
 	trigger.timer[1].delay = (1 / 7200)
 	trigger.timer[1].passthrough = true
 	trigger.timer[1].stimulus = smua.trigger.ARMED_EVENT_ID
-	trigger.timer[1].count = numDataPoints - 1
+	trigger.timer[1].count = numDataPoints 
 
 	-- Configure the SMU trigger model
 	smua.trigger.source.listv(sourceValues)
@@ -1332,11 +1340,11 @@ function Spectrum_Sweep(Vrms,  limitI,display)
 	-- Start the trigger model execution
 	smua.trigger.initiate()
 	-- Wait until the sweep has completed
-	waitcomplete()
+waitcomplete()
 	smua.source.output					= smua.OUTPUT_OFF
 
     for x=1, smua.nvbuffer2.n do
-	    print(smua.nvbuffer1.timestamps[x], smua.nvbuffer2[x], smua.nvbuffer1[x])
+	    print(smua.nvbuffer1.timestamps[x], smua.nvbuffer2[x], smua.nvbuffer1[x],0,0,0,0,0,0)
     end
 end
 
@@ -1345,8 +1353,7 @@ additional = "#Additional"
 if (additional=="IVC") then 
     if (doCap==1) then 
         reset()
-        AC_Waveform_Sweep(.01,0, 15, 30,  10e-9,10,1,0)
-        Square_Waveform_Sweep(.01, 40, 80,  10e-9,0,0)
+	Spectrum_Sweep(.1,  1e-9)
         smua.source.output = smua.OUTPUT_OFF
     else 
         for c=1,2 do
